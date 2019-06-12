@@ -1,0 +1,26 @@
+{
+  "name": "events-countdown-chrome",
+  "version": "1.0.0",
+  "description": "Simple event countdown page in place of new tab",
+  "main": "index.js",
+  "scripts": {
+    "start": "npx parcel index.html",
+    "build": "rm -rf dist extension && npx parcel build index.html --public-url ./ && mkdir extension && mv dist extension && cp manifest.json extension"
+  },
+  "author": "Alan Smith",
+  "license": "MIT",
+  "dependencies": {
+    "vue": "^2.6.10",
+    "vue-hot-reload-api": "^2.3.3"
+  },
+  "devDependencies": {
+    "@vue/component-compiler-utils": "^3.0.0",
+    "babel-core": "^6.26.3",
+    "babel-preset-env": "^1.7.0",
+    "eslint": "^5.16.0",
+    "eslint-plugin-vue": "^5.2.2",
+    "parcel-bundler": "^1.12.3",
+    "parcel-plugin-eslint": "^1.0.7",
+    "vue-template-compiler": "^2.6.10"
+  }
+}

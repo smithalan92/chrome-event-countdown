@@ -1,0 +1,10 @@
+{
+  "name": "Event Countdown New Tab",
+  "description": "Overrides the new tab page with an event countdown",
+  "version": "0.1",
+  "incognito": "split",
+  "chrome_url_overrides": {
+    "newtab": "dist/index.html"
+  },
+  "manifest_version": 2
+}
