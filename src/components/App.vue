@@ -7,7 +7,7 @@
     <event
       event-name="Thailand"
       :event-date="thailandDate"
-      background="https://dak95nwic4sny.cloudfront.net/73/thailand-40155070-1508147260-ImageGalleryLightboxLarge.jpg"></event>
+      background="https://dak95nwic4sny.cloudfront.net/73/thailand-40155070-1508147260-ImageGalleryLightboxLarge.jpg"/>
   </div>
 </template>
 <script>

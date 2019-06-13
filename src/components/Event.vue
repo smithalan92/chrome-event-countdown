@@ -2,12 +2,14 @@
   <div class="c-event">
     <div
       class="c-event__background"
-      :style="{ 'background-image': 'url(' + background + ')' }"></div>
+      :style="{ 'background-image': 'url(' + background + ')' }"/>
     <div class="c-event__info">
       <span class="c-event__title">{{ eventName }}</span>
       <div class="c-event__countdown">
         <countdown :time="countdownDate">
-          <template slot-scope="props"> {{ getTimeString(props) }}</template>
+          <template slot-scope="props">
+            <div v-html="getTimeHtml(props)"></div>
+          </template>
         </countdown>
       </div>
     </div>
@@ -48,22 +50,22 @@ export default {
   },
 
   methods: {
-    getTimeString(props) {
+    getTimeHtml(props) {
       if (props.days > 7) {
         const weeks = Math.round(props.days / 7);
         const days = props.days % 7;
-        let string = ''
-        string += `${weeks} week${weeks > 1 ? 's' : ''}`;
+        let html = ''
+        html += `</br>${weeks} week${weeks !== 1 ? 's' : ''}`;
 
-        string += ` ${days} day${days !== 1 ? 's' : ''}`
+        html += `</br>${days} day${days !== 1 ? 's' : ''}`
 
-        string += ` ${props.hours} hour${props.hours > 1 ? 's' : ''}`
+        html += `</br>${props.hours} hour${props.hours !== 1 ? 's' : ''}`
 
-        string += ` ${props.minutes} minute${props.minutes > 1 ? 's' : ''}`
+        html += `</br>${props.minutes} minute${props.minutes !== 1 ? 's' : ''}`
 
-        string += ` and ${props.seconds} second${props.seconds > 1 ? 's' : ''}`
+        html += `</br>${props.seconds} second${props.seconds !== 1 ? 's' : ''}`
 
-        return string;
+        return html;
       }
     },
   },
