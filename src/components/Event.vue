@@ -5,13 +5,24 @@
       :style="{ 'background-image': 'url(' + background + ')' }"/>
     <div class="c-event__info">
       <span class="c-event__title">{{ eventName }}</span>
-      <div class="c-event__countdown">
-        <countdown :time="countdownDate">
-          <template slot-scope="props">
-            <div v-html="getTimeHtml(props)"></div>
-          </template>
-        </countdown>
-      </div>
+      <countdown
+        :time="countdownDate"
+        :emit-events="true"
+        @progress="calculateCountdownProgress">
+        <div class="c-event__countdown">
+          <div class="c-event__countdown-weeks">{{ weekString }}</div>
+          <div class="c-event__countdown-other">
+            <div class="c-event__countdown-other-row">
+              <span class="c-event__countdown-time" v-if="dayString">{{ dayString }}</span>
+              <span class="c-event__countdown-time">{{ hourString }}</span>
+            </div>
+            <div class="c-event__countdown-other-row">
+              <span class="c-event__countdown-time">{{ minuteString }}</span>
+              <span class="c-event__countdown-time">{{ secondString }}</span>
+            </div>
+          </div>
+        </div>
+      </countdown>
     </div>
   </div>
 </template>
@@ -43,6 +54,16 @@ export default {
     Countdown,
   },
 
+  data() {
+    return {
+      weekString: '',
+      dayString: '',
+      hourString: '',
+      minuteString: '',
+      secondString: '',
+    };
+  },
+
   computed: {
     countdownDate() {
      return this.eventDate.getTime() - Date.now();
@@ -50,24 +71,25 @@ export default {
   },
 
   methods: {
-    getTimeHtml(props) {
-      if (props.days > 7) {
-        const weeks = Math.round(props.days / 7);
-        const days = props.days % 7;
-        let html = ''
-        html += `</br>${weeks} week${weeks !== 1 ? 's' : ''}`;
+    calculateCountdownProgress({ weeks, days, hours, minutes, seconds }) {
+        const weekCount = Math.round(days / 7);
+        const dayCount = days % 7;
 
-        html += `</br>${days} day${days !== 1 ? 's' : ''}`
+        this.weekString = this.getTimeString(weekCount, 'week');
 
-        html += `</br>${props.hours} hour${props.hours !== 1 ? 's' : ''}`
+        this.dayString = this.getTimeString(dayCount, 'day');
 
-        html += `</br>${props.minutes} minute${props.minutes !== 1 ? 's' : ''}`
+        this.hourString = this.getTimeString(hours, 'hour');
 
-        html += `</br>${props.seconds} second${props.seconds !== 1 ? 's' : ''}`
+        this.minuteString = this.getTimeString(minutes, 'minute');
 
-        return html;
-      }
+        this.secondString = this.getTimeString(seconds, 'second');
     },
+
+    getTimeString(value, type) {
+      if (value === 0 && type !== 'second' ) return '';
+      return `${value} ${type}${value !== 1 ? 's' : ''}`;
+    }
   },
 };
 </script>
@@ -104,14 +126,43 @@ export default {
     justify-content: center;
     padding: 30px;
     flex: 1;
+    height: 188px;
   }
 
   .c-event__title {
     font-size: 40px;
+    font-weight: bold;
+    margin-bottom: 10px;
   }
 
   .c-event__countdown {
-    font-size: 18px;
-    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .c-event__countdown-weeks {
+    font-size: 24px;
+    margin-right: 5px;
+    text-align: center
+  }
+
+  .c-event__countdown-other {
+    display: flex;
+    flex-direction: column;
+    font-size: 16px;
+    text-align: center
+  }
+
+  .c-event__countdown-other-row {
+    display: flex;
+    justify-content: center;
+    padding: 2px;
+  }
+
+  .c-event__countdown-time {
+    margin-right: 5px;
+    width: 82px;
   }
 </style>
