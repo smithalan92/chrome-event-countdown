@@ -4,7 +4,7 @@
       class="c-event__background"
       :style="{ 'background-image': 'url(' + background + ')' }"/>
     <div class="c-event__info">
-      <span class="c-event__title">{{ eventName }}</span>
+      <span class="c-event__title" v-if="isReady">{{ eventName }}</span>
       <countdown
         :time="countdownDate"
         :emit-events="true"
@@ -61,6 +61,7 @@ export default {
       hourString: '',
       minuteString: '',
       secondString: '',
+      isReady: false,
     };
   },
 
@@ -84,6 +85,8 @@ export default {
         this.minuteString = this.getTimeString(minutes, 'minute');
 
         this.secondString = this.getTimeString(seconds, 'second');
+
+        if (!this.isReady) this.isReady = true;
     },
 
     getTimeString(value, type) {

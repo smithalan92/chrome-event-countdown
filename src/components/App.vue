@@ -1,30 +1,35 @@
 <template>
   <div class="c-app">
-    <event
-      event-name="Ukraine"
-      :event-date="ukraineDate"
-      background="https://www.nationalgeographic.com/content/dam/travel/Guide-Pages/europe/cityscape-kiev-ukraine.adapt.1900.1.jpg"></event>
-    <event
-      event-name="Thailand"
-      :event-date="thailandDate"
-      background="https://dak95nwic4sny.cloudfront.net/73/thailand-40155070-1508147260-ImageGalleryLightboxLarge.jpg"/>
+    <events :events="events"/>
+    <add-event/>
   </div>
 </template>
 <script>
-import Event from './Event.vue';
+import Events from './Events.vue';
+import AddEvent from './AddEvent.vue';
+import { get, set } from '../utils/storage';
 
 export default {
   name: 'App',
 
   components: {
-    Event,
+    Events,
+    AddEvent,
   },
 
   data() {
     return {
-      ukraineDate: new Date('2019-08-02'),
-      thailandDate: new Date('2019-10-25'),
+      events: [],
     };
+  },
+
+  created() {
+    const events = get('events') || [];
+
+    events.forEach((event) => {
+      event.date = new Date(event.date);
+      this.events.push(event);
+    });
   },
 };
 </script>
@@ -46,5 +51,6 @@ export default {
 
   .c-app {
     display: flex;
+    flex-direction: column;
   }
 </style>
