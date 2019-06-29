@@ -1,5 +1,7 @@
 <template>
-  <div class="c-add-event__overlay">
+  <div
+    class="c-add-event__overlay"
+    v-if="isVisible">
     <div class="c-add-event">
       <div class="c-add-event__header">
         <div class="c-add-event__header-title">
@@ -48,7 +50,7 @@
           class="c-add-event__button c-add-event__button--cancel"
           @click="onClickCancel">
           Cancel
-        </div>
+        </divclass="c-add-event__overlay">
       </div>
     </div>
   </div>
@@ -66,6 +68,7 @@ export default {
 
   data() {
     return {
+      isVisible: false,
       eventName: '',
       eventDate: '',
       eventBackgroundImage: '',
@@ -73,12 +76,26 @@ export default {
   },
 
   methods: {
-    onClickAdd() {
+    open() {
+      this.isVisible = true;
+    },
 
+    close() {
+      this.isVisible = false;
+    },
+
+    onClickAdd() {
+      const date = new Date(this.eventDate);
+      this.$emit('add', {
+        eventName: this.eventName,
+        eventDate: date,
+        background: this.eventBackgroundImage,
+      });
+      this.close();
     },
 
     onClickCancel() {
-
+      this.close();
     },
   },
 };

@@ -3,8 +3,8 @@
     <event
       v-for="event in events"
       :key="event.name"
-      :event-name="event.name"
-      :event-date="event.date"
+      :event-name="event.eventName"
+      :event-date="event.eventDate"
       :background="event.background"/>
   </div>
 </template>
@@ -29,6 +29,7 @@ export default {
 <style lang="scss">
   .c-events {
     display: flex;
+    flex: 1;
   }
 </style>
 

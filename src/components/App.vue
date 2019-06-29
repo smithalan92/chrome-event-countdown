@@ -1,7 +1,12 @@
 <template>
   <div class="c-app">
     <events :events="events"/>
-    <add-event/>
+    <div
+      class="c-app__add-event-button"
+      @click="openAddEvent">Add Event</div>
+    <add-event
+      ref="addEvent"
+      @add="onAddEvent"/>
   </div>
 </template>
 <script>
@@ -23,11 +28,21 @@ export default {
     };
   },
 
+  methods: {
+    onAddEvent(event) {
+      this.events.push(event);
+    },
+
+    openAddEvent() {
+      this.$refs.addEvent.open();
+    },
+  },
+
   created() {
     const events = get('events') || [];
 
     events.forEach((event) => {
-      event.date = new Date(event.date);
+      event.eventDate = new Date(event.eventDate);
       this.events.push(event);
     });
   },
@@ -52,5 +67,19 @@ export default {
   .c-app {
     display: flex;
     flex-direction: column;
+  }
+
+  .c-app__add-event-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100px;
+    height: 30px;
+    background: #fff;
+    border-radius: 2px;
+    position: absolute;
+    bottom: 30px;
+    right: 30px;
+    cursor: pointer;
   }
 </style>
