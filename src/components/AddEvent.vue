@@ -50,7 +50,7 @@
           class="c-add-event__button c-add-event__button--cancel"
           @click="onClickCancel">
           Cancel
-        </divclass="c-add-event__overlay">
+        </div>
       </div>
     </div>
   </div>
@@ -82,16 +82,25 @@ export default {
 
     close() {
       this.isVisible = false;
+      this.eventName = '';
+      this.eventDate = '';
+      this.eventBackgroundImage = '';
     },
 
     onClickAdd() {
       const date = new Date(this.eventDate);
+      const eventId = this.generateEventId();
       this.$emit('add', {
+        eventId,
         eventName: this.eventName,
         eventDate: date,
         background: this.eventBackgroundImage,
       });
       this.close();
+    },
+
+    generateEventId() {
+       return Math.floor(Math.random() * Date.now());
     },
 
     onClickCancel() {

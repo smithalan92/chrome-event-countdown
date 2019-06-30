@@ -3,6 +3,7 @@
     <event
       v-for="event in events"
       :key="event.name"
+      :event-id="event.eventId"
       :event-name="event.eventName"
       :event-date="event.eventDate"
       :background="event.background"/>
@@ -23,6 +24,12 @@ export default {
 
   components: {
     Event,
+  },
+
+  methods: {
+    onRemoveEvent(id) {
+      this.$emit('remove-event', id);
+    },
   },
 };
 </script>

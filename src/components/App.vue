@@ -31,6 +31,7 @@ export default {
   methods: {
     onAddEvent(event) {
       this.events.push(event);
+      set('events', this.events);
     },
 
     openAddEvent() {
