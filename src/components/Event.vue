@@ -85,20 +85,20 @@ export default {
 
   methods: {
     calculateCountdownProgress({ weeks, days, hours, minutes, seconds }) {
-        const weekCount = Math.round(days / 7);
-        const dayCount = days % 7;
+      const weekCount = Math.floor(days / 7);
+      const dayCount = days % 7;
 
-        this.weekString = this.getTimeString(weekCount, 'week');
+      this.weekString = this.getTimeString(weekCount, 'week');
 
-        this.dayString = this.getTimeString(dayCount, 'day');
+      this.dayString = this.getTimeString(dayCount, 'day');
 
-        this.hourString = this.getTimeString(hours, 'hour');
+      this.hourString = this.getTimeString(hours, 'hour');
 
-        this.minuteString = this.getTimeString(minutes, 'minute');
+      this.minuteString = this.getTimeString(minutes, 'minute');
 
-        this.secondString = this.getTimeString(seconds, 'second');
+      this.secondString = this.getTimeString(seconds, 'second');
 
-        if (!this.isReady) this.isReady = true;
+      if (!this.isReady) this.isReady = true;
     },
 
     getTimeString(value, type) {
