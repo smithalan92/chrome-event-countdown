@@ -1,6 +1,8 @@
 <template>
   <div class="c-app">
-    <events :events="events"/>
+    <events
+      :events="events"
+      @remove-event="onRemoveEvent"/>
     <div
       class="c-app__add-event-button"
       @click="openAddEvent">Add Event</div>
@@ -37,6 +39,12 @@ export default {
     openAddEvent() {
       this.$refs.addEvent.open();
     },
+
+    onRemoveEvent(eventId) {
+      const index = this.events.findIndex((event) => event.eventId === eventId);
+      this.events.splice(index, 1);
+      set('events', this.events);
+    },
   },
 
   created() {
@@ -51,6 +59,7 @@ export default {
 </script>
 <style lang="scss">
   @import url('https://fonts.googleapis.com/css?family=Muli:400,700&display=swap');
+  @import "../../node_modules/vue2-animate/src/sass/vue2-animate.scss";
 
   html,
   body,
@@ -63,6 +72,7 @@ export default {
   body {
     font-family: 'Muli', sans-serif;
     background-color: #000;
+    color: #474747;
   }
 
   .c-app {

@@ -4,6 +4,11 @@
       class="c-event__background"
       :style="{ 'background-image': 'url(' + background + ')' }"/>
     <div class="c-event__info">
+      <div
+        class="c-event-info-delete"
+        @click="onClickRemove">
+        <trash-icon class="c-event__info-delete-icon"/>
+      </div>
       <span class="c-event__title" v-if="isReady">{{ eventName }}</span>
       <countdown
         :time="countdownDate"
@@ -28,6 +33,7 @@
 </template>
 <script>
 import Countdown from '@chenfengyuan/vue-countdown';
+import TrashIcon from './Icons/Trash.vue';
 
 export default {
   name: 'Event',
@@ -57,6 +63,7 @@ export default {
 
   components: {
     Countdown,
+    TrashIcon,
   },
 
   data() {
@@ -100,7 +107,7 @@ export default {
     },
 
     onClickRemove() {
-      this.$emit('remove-event', this.event.id);
+      this.$emit('remove-event', this.eventId);
     },
   },
 };
@@ -131,6 +138,7 @@ export default {
   }
 
   .c-event__info {
+    position: relative;
     display: flex;
     flex-direction: column;
     background: rgba(#000, 0.4);
@@ -139,6 +147,20 @@ export default {
     padding: 30px;
     flex: 1;
     height: 188px;
+  }
+
+  .c-event-info-delete {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    padding: 4px;
+    cursor: pointer;
+
+    .c-event__info-delete-icon {
+      fill: #fff;
+      width: 15px;
+      height: 15px;
+    }
   }
 
   .c-event__title {
