@@ -3,12 +3,13 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "start": "vue-cli-service serve",
+    "start": "vue-cli-service serve --open",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
     "@chenfengyuan/vue-countdown": "^1.1.2",
+    "directory-named-webpack-plugin": "^4.0.1",
     "luxon": "^1.16.0",
     "vue": "^2.6.10",
     "vue-datetime": "^1.0.0-beta.10",
@@ -26,6 +27,7 @@
     "eslint-plugin-vue": "^5.0.0",
     "node-sass": "^4.9.0",
     "sass-loader": "^7.1.0",
+    "vue-svg-loader": "^0.12.0",
     "vue-template-compiler": "^2.6.10"
   }
 }
