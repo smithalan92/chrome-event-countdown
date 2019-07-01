@@ -12,9 +12,9 @@
   </div>
 </template>
 <script>
-import Events from './Events.vue';
-import AddEvent from './AddEvent.vue';
-import { get, set } from '../utils/storage';
+import Events from './components/Events.vue';
+import AddEvent from './components/AddEvent.vue';
+import { get, set } from './utils/storage';
 
 export default {
   name: 'App',
@@ -59,7 +59,7 @@ export default {
 </script>
 <style lang="scss">
   @import url('https://fonts.googleapis.com/css?family=Muli:400,700&display=swap');
-  @import "../../node_modules/vue2-animate/src/sass/vue2-animate.scss";
+  @import "../node_modules/vue2-animate/src/sass/vue2-animate.scss";
 
   html,
   body,

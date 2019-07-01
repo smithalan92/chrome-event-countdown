@@ -1,34 +1,31 @@
 {
-  "name": "events-countdown-chrome",
-  "version": "1.0.0",
-  "description": "Simple event countdown page in place of new tab",
-  "main": "index.js",
+  "name": "chrome-event-countdown",
+  "version": "0.1.0",
+  "private": true,
   "scripts": {
-    "start": "npx parcel index.html",
-    "build": "rm -rf dist extension && cross-env NODE_ENV=production npx parcel build index.html --public-url ./ && mkdir extension && mv dist extension && cp manifest.json extension"
+    "start": "vue-cli-service serve",
+    "build": "vue-cli-service build",
+    "lint": "vue-cli-service lint"
   },
-  "author": "Alan Smith",
-  "license": "MIT",
   "dependencies": {
     "@chenfengyuan/vue-countdown": "^1.1.2",
     "luxon": "^1.16.0",
     "vue": "^2.6.10",
     "vue-datetime": "^1.0.0-beta.10",
     "vue-global-events": "^1.1.2",
-    "vue-hot-reload-api": "^2.3.3",
     "vue2-animate": "^2.1.0",
+    "vuex": "^3.0.1",
     "weekstart": "^1.0.0"
   },
   "devDependencies": {
-    "@vue/component-compiler-utils": "^3.0.0",
-    "babel-core": "^6.26.3",
-    "babel-preset-env": "^1.7.0",
-    "cross-env": "^5.2.0",
+    "@vue/cli-plugin-eslint": "^3.8.0",
+    "@vue/cli-service": "^3.8.0",
+    "@vue/eslint-config-airbnb": "^4.0.0",
+    "babel-eslint": "^10.0.1",
     "eslint": "^5.16.0",
-    "eslint-plugin-vue": "^5.2.2",
-    "parcel-bundler": "^1.12.3",
-    "parcel-plugin-eslint": "^1.0.7",
-    "sass": "^1.21.0",
+    "eslint-plugin-vue": "^5.0.0",
+    "node-sass": "^4.9.0",
+    "sass-loader": "^7.1.0",
     "vue-template-compiler": "^2.6.10"
   }
 }

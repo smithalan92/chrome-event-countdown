@@ -11,7 +11,7 @@
   </div>
 </template>
 <script>
-import Event from './Event';
+import Event from './Event.vue';
 
 export default {
   name: 'Events',
@@ -40,4 +40,3 @@ export default {
     flex: 1;
   }
 </style>
-

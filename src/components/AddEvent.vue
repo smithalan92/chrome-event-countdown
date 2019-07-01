@@ -307,5 +307,3 @@ export default {
     }
   }
 </style>
-
-

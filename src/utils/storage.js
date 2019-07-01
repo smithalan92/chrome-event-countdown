@@ -4,7 +4,7 @@
 export function get(key) {
   let value = null;
 
-  if(process.env.NODE_ENV === 'production') {
+  if (process.env.NODE_ENV === 'production') {
     value = chrome.storage.local.get(key);
   } else {
     value = localStorage.getItem(key);
@@ -12,9 +12,8 @@ export function get(key) {
 
   if (value) {
     return JSON.parse(value);
-  } else {
-    return value;
   }
+  return value;
 }
 
 export function set(key, value) {
