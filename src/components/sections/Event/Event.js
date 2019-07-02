@@ -73,7 +73,7 @@ export default {
     },
 
     onClickRemove() {
-      this.$emit('remove-event', this.eventId);
+      this.$store.dispatch('removeEvent', this.eventId);
     },
   },
 };

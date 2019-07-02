@@ -6,8 +6,7 @@
       :event-id="event.eventId"
       :event-name="event.eventName"
       :event-date="event.eventDate"
-      :background="event.background"
-      @remove-event="onRemoveEvent"/>
+      :background="event.background"/>
   </div>
 </template>
 <script src="./EventList.js"></script>

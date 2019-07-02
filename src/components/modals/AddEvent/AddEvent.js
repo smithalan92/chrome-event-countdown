@@ -44,7 +44,7 @@ export default {
       const date = new Date(this.eventDate);
       const eventId = this.generateEventId();
 
-      this.$emit('add', {
+      this.$store.dispatch('addEvent', {
         eventId,
         eventName: this.eventName,
         eventDate: date,

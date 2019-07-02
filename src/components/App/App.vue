@@ -1,14 +1,10 @@
 <template>
   <div class="c-app">
-    <event-list
-      :events="events"
-      @remove-event="onRemoveEvent"/>
+    <event-list/>
     <div
       class="c-app__add-event-button"
       @click="openAddEvent">Add Event</div>
-    <add-event
-      ref="addEvent"
-      @add="onAddEvent"/>
+    <add-event ref="addEvent"/>
   </div>
 </template>
 <script src="./App.js"></script>
