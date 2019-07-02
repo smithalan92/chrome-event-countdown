@@ -1,6 +1,7 @@
 import EventList from '@sections/EventList/EventList.vue';
 import AddEvent from '@modals/AddEvent/AddEvent.vue';
 import { get } from '@/utils/storage';
+import PlusIcon from '@/assets/icons/plus.svg';
 
 export default {
   name: 'App',
@@ -8,6 +9,7 @@ export default {
   components: {
     EventList,
     AddEvent,
+    PlusIcon,
   },
 
   methods: {

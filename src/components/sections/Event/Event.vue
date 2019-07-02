@@ -17,14 +17,10 @@
         <div class="c-event__countdown">
           <div class="c-event__countdown-weeks">{{ weekString }}</div>
           <div class="c-event__countdown-other">
-            <div class="c-event__countdown-other-row">
-              <span class="c-event__countdown-time" v-if="dayString">{{ dayString }}</span>
-              <span class="c-event__countdown-time">{{ hourString }}</span>
-            </div>
-            <div class="c-event__countdown-other-row">
-              <span class="c-event__countdown-time">{{ minuteString }}</span>
-              <span class="c-event__countdown-time">{{ secondString }}</span>
-            </div>
+            <span class="c-event__countdown-time">{{ dayString }}</span>
+            <span class="c-event__countdown-time">{{ hourString }}</span>
+            <span class="c-event__countdown-time">{{ minuteString }}</span>
+            <span class="c-event__countdown-time">{{ secondString }}</span>
           </div>
         </div>
       </countdown>

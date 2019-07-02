@@ -41,6 +41,12 @@
     padding: 4px;
     cursor: pointer;
 
+    &:hover {
+        .c-event__info-delete-icon {
+            fill: rgba(#fff, 0.7);
+        }
+    }
+
     .c-event__info-delete-icon {
         fill: #fff;
         width: 15px;
@@ -81,6 +87,5 @@
 }
 
 .c-event__countdown-time {
-    margin-right: 5px;
-    width: 82px;
+    margin-top: 5px;
 }

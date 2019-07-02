@@ -68,7 +68,6 @@ export default {
     },
 
     getTimeString(value, type) {
-      if (value === 0 && type !== 'second') return '';
       return `${value} ${type}${value !== 1 ? 's' : ''}`;
     },
 

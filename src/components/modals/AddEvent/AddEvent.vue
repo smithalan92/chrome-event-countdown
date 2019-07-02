@@ -6,12 +6,15 @@
       <div
         class="c-add-event"
         style="animation-duration: 0.5s"
+        v-click-outside="close"
         v-if="isVisible">
         <div class="c-add-event__header">
           <div class="c-add-event__header-title">
             Add New Event
           </div>
-          <div class="c-add-event__header-close">
+          <div
+            class="c-add-event__header-close"
+            @click="close">
             <close-icon class="c-add-event__header-close-icon"/>
           </div>
         </div>

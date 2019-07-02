@@ -20,16 +20,28 @@ body {
     flex-direction: column;
 }
 
-.c-app__add-event-button {
+.c-app__add-event {
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 100px;
-    height: 30px;
-    background: #fff;
-    border-radius: 2px;
+    width: 35px;
+    height: 35px;
+    background: #474747;
+    border-radius: 50%;
     position: absolute;
     bottom: 30px;
     right: 30px;
     cursor: pointer;
+
+    &:hover {
+        .c-app__add-event-icon {
+            fill: rgba(#fff, 0.7);
+        }
+    }
+
+    .c-app__add-event-icon {
+        width: 20px;
+        height: 20px;
+        fill: #fff;
+    }
 }

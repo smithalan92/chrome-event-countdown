@@ -39,7 +39,10 @@ export default {
     },
 
     onClickAdd() {
-      if (!this.validateInput()) return;
+      if (!this.validateInput()) {
+        console.log('invalid input');
+        return;
+      }
 
       const date = new Date(this.eventDate);
       const eventId = this.generateEventId();
@@ -62,10 +65,11 @@ export default {
       if (this.eventName === '') return false;
       if (this.eventDate === '') return false;
 
-      if (this.eventBackgroundImage !== '' && (!this.eventBackgroundImage.endsWith('.png')
-        || !this.eventBackgroundImage.endsWith('.jpg')
-        || !this.eventBackgroundImage.endsWith('.jpeg')
-        || !this.eventBackgroundImage.endsWith('.gif'))) return false;
+      if (this.eventBackgroundImage.endsWith('.png')
+        || this.eventBackgroundImage.endsWith('.jpg')
+        || this.eventBackgroundImage.endsWith('.jpeg')
+        || this.eventBackgroundImage.endsWith('.gif')
+      ) return true;
 
       if (this.eventBackgroundImage === '') {
         this.eventBackgroundImage = 'https://picsum.photos/1200/800';

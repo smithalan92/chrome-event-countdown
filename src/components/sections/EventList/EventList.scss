@@ -1,4 +1,12 @@
-.c-event-list {
+.c-event-list,
+.c-event-list__list,
+.c-event-list__blank-slate {
     display: flex;
     flex: 1;
+}
+
+.c-event-list__blank-slate {
+    align-items: center;
+    justify-content: center;
+    color: #fff;
 }
