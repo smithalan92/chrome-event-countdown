@@ -6,7 +6,7 @@
       @click="openAddEvent">
       <plus-icon class="c-app__add-event-icon"/>
     </div>
-    <add-event ref="addEvent"/>
+    <modify-event/>
   </div>
 </template>
 <script src="./App.js"></script>

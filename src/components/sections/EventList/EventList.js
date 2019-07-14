@@ -1,15 +1,22 @@
 import Event from '@sections/Event/Event.vue';
+import Dragable from 'vuedraggable';
 
 export default {
   name: 'EventList',
 
   components: {
     Event,
+    Dragable,
   },
 
   computed: {
-    events() {
-      return this.$store.state.events;
+    events: {
+      get() {
+        return this.$store.state.events;
+      },
+      set(value) {
+        this.$store.dispatch('setEvents', value);
+      },
     },
   },
 

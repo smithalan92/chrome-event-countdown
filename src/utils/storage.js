@@ -1,19 +1,30 @@
 /* eslint-disable no-undef */
 /* eslint-disable no-console */
 
-export function get(key) {
+export async function get(key) {
   let value = null;
 
-  if (process.env.NODE_ENV === 'production') {
-    value = chrome.storage.local.get(key);
-  } else {
-    value = localStorage.getItem(key);
-  }
-
-  if (value) {
-    return JSON.parse(value);
-  }
-  return value;
+  return new Promise((resolve, reject) => {
+    if (process.env.NODE_ENV === 'production') {
+      chrome.storage.local.get(key, (result) => {
+        if (result && result.events) {
+          resolve(JSON.parse(result.events));
+        } else {
+          resolve([]);
+        }
+      });
+    } else {
+      value = localStorage.getItem(key);
+      if (value) {
+        try {
+          value = JSON.parse(value);
+        } catch (e) {
+          reject(e);
+        }
+      }
+      resolve(value);
+    }
+  });
 }
 
 export function set(key, value) {

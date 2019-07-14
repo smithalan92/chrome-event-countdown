@@ -10,7 +10,7 @@
         v-if="isVisible">
         <div class="c-add-event__header">
           <div class="c-add-event__header-title">
-            Add New Event
+            {{ mode === 'edit' ? `Edit ${eventName}` : 'Add New Event' }}
           </div>
           <div
             class="c-add-event__header-close"
@@ -22,6 +22,7 @@
           <div class="c-add-event__row">
             <span class="c-add-event__label">Event Name</span>
             <input
+              ref="name"
               class="c-add-event__input"
               type="text"
               v-model="eventName"/>
@@ -62,8 +63,8 @@
           </div>
           <div
             class="c-add-event__button c-add-event__button--add"
-            @click="onClickAdd">
-            Add
+            @click="onClickConfirm">
+            {{ mode === 'edit' ? `Update` : 'Add' }}
           </div>
         </div>
       </div>
@@ -72,5 +73,5 @@
       @keydown.esc="close"/>
   </div>
 </template>
-<script src="./AddEvent.js"></script>
-<style src="./AddEvent.scss" lang="scss"></style>
+<script src="./ModifyEvent.js"></script>
+<style src="./ModifyEvent.scss" lang="scss"></style>

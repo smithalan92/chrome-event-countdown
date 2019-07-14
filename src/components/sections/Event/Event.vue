@@ -5,12 +5,22 @@
       :style="{ 'background-image': 'url(' + background + ')' }"/>
     <div class="c-event__info">
       <div
-        class="c-event-info-delete"
-        @click="onClickRemove">
-        <trash-icon class="c-event__info-delete-icon"/>
+         class="c-event__actions"
+         v-if="isReady">
+        <div
+          class="c-event-info-action"
+          @click="onClickEdit">
+          <edit-icon class="c-event__info-icon"/>
+        </div>
+        <div
+          class="c-event-info-action"
+          @click="onClickRemove">
+          <trash-icon class="c-event__info-icon"/>
+        </div>
       </div>
       <span class="c-event__title" v-if="isReady">{{ eventName }}</span>
       <countdown
+        v-if="!hasEventPassed"
         :time="countdownDate"
         :emit-events="true"
         @progress="calculateCountdownProgress">
@@ -24,6 +34,12 @@
           </div>
         </div>
       </countdown>
+      <div
+        class="c-event__finished"
+        v-else>
+        {{ formatedEventDate }}
+        <check-icon class="c-event__finished-icon"/>
+      </div>
     </div>
   </div>
 </template>

@@ -4,7 +4,7 @@ import CloseIcon from '@/assets/icons/close.svg';
 import 'vue-datetime/dist/vue-datetime.css';
 
 export default {
-  name: 'AddEvent',
+  name: 'ModifyEvent',
 
   components: {
     GlobalEvents,
@@ -14,6 +14,7 @@ export default {
 
   data() {
     return {
+      eventId: null,
       isVisible: false,
       eventName: '',
       eventDate: '',
@@ -22,20 +23,38 @@ export default {
     };
   },
 
+  computed: {
+    mode() {
+      if (this.eventId) return 'edit';
+      return 'add';
+    },
+  },
+
   methods: {
     async open() {
       this.isOverlayVisible = true;
       await this.$nextTick();
       this.isVisible = true;
+      await this.$nextTick();
+      this.$refs.name.focus();
     },
 
     async close() {
       this.isVisible = false;
       await this.$nextTick();
       this.isOverlayVisible = false;
+      this.eventId = null;
       this.eventName = '';
       this.eventDate = '';
       this.eventBackgroundImage = '';
+    },
+
+    onClickConfirm() {
+      if (this.mode === 'add') {
+        this.onClickAdd();
+      } else {
+        this.onClickEdit();
+      }
     },
 
     onClickAdd() {
@@ -45,10 +64,28 @@ export default {
       }
 
       const date = new Date(this.eventDate);
-      const eventId = this.generateEventId();
+      const newEventId = this.generateEventId();
 
       this.$store.dispatch('addEvent', {
-        eventId,
+        eventId: newEventId,
+        eventName: this.eventName,
+        eventDate: date,
+        background: this.eventBackgroundImage,
+      });
+
+      this.close();
+    },
+
+    onClickEdit() {
+      if (!this.validateInput()) {
+        console.log('invalid input');
+        return;
+      }
+
+      const date = new Date(this.eventDate);
+
+      this.$store.dispatch('updateEvent', {
+        eventId: this.eventId,
         eventName: this.eventName,
         eventDate: date,
         background: this.eventBackgroundImage,
@@ -81,5 +118,21 @@ export default {
     onClickCancel() {
       this.close();
     },
+  },
+
+  mounted() {
+    this.$store.subscribeAction((action) => {
+      const { payload, type } = action;
+      if (type === 'openAddEventModal') {
+        if (payload) {
+          this.eventId = payload.eventId;
+          this.eventName = payload.eventName;
+          this.eventDate = payload.eventDate;
+          this.eventBackgroundImage = payload.eventBackgroundImage;
+        }
+
+        this.open();
+      }
+    });
   },
 };

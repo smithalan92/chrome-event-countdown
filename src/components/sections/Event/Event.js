@@ -1,5 +1,8 @@
 import Countdown from '@chenfengyuan/vue-countdown';
+import format from 'date-fns/format';
 import TrashIcon from '@/assets/icons/trash.svg';
+import EditIcon from '@/assets/icons/edit.svg';
+import CheckIcon from '@/assets/icons/check.svg';
 
 export default {
   name: 'Event',
@@ -30,6 +33,8 @@ export default {
   components: {
     Countdown,
     TrashIcon,
+    EditIcon,
+    CheckIcon,
   },
 
   data() {
@@ -40,12 +45,17 @@ export default {
       minuteString: '',
       secondString: '',
       isReady: false,
+      formatedEventDate: format(this.eventDate, 'DD MMMM YYYY, h:mma'),
     };
   },
 
   computed: {
     countdownDate() {
       return this.eventDate.getTime() - Date.now();
+    },
+
+    hasEventPassed() {
+      return this.countdownDate < 0;
     },
   },
 
@@ -74,5 +84,18 @@ export default {
     onClickRemove() {
       this.$store.dispatch('removeEvent', this.eventId);
     },
+
+    onClickEdit() {
+      this.$store.dispatch('openAddEventModal', {
+        eventId: this.eventId,
+        eventName: this.eventName,
+        eventDate: this.eventDate.toISOString(),
+        eventBackgroundImage: this.background,
+      });
+    },
+  },
+
+  mounted() {
+    if (this.hasEventPassed) this.isReady = true;
   },
 };

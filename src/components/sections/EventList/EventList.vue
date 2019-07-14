@@ -3,13 +3,15 @@
     <div
       class="c-event-list__list"
       v-if="events.length">
-      <event
-        v-for="event in events"
-        :key="event.name"
-        :event-id="event.eventId"
-        :event-name="event.eventName"
-        :event-date="event.eventDate"
-        :background="event.background"/>
+      <dragable v-model="events" group="events" @start="drag=true" @end="drag=false" class="c-event-list__dragable">
+          <event
+            v-for="event in events"
+            :key="event.name"
+            :event-id="event.eventId"
+            :event-name="event.eventName"
+            :event-date="event.eventDate"
+            :background="event.background"/>
+      </dragable>
     </div>
     <div
       class="c-event-list__blank-slate"

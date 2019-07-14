@@ -6,6 +6,7 @@
     color: #fff;
     position: relative;
     flex: 1;
+    cursor: move;
 }
 
 .c-event__background {
@@ -34,24 +35,29 @@
     height: 188px;
 }
 
-.c-event-info-delete {
-    position: absolute;
-    top: 10px;
-    right: 20px;
-    padding: 4px;
+.c-event__actions {
+    display: flex;
+    align-items: flex-end;
+    align-items: center;
+    justify-content: flex-end;
+    width: 100%;
+}
+
+.c-event-info-action {
+    padding: 4px 8px;
     cursor: pointer;
 
     &:hover {
-        .c-event__info-delete-icon {
+        .c-event__info-icon {
             fill: rgba(#fff, 0.7);
         }
     }
+}
 
-    .c-event__info-delete-icon {
-        fill: #fff;
-        width: 15px;
-        height: 15px;
-    }
+.c-event__info-icon {
+    fill: #fff;
+    width: 15px;
+    height: 15px;
 }
 
 .c-event__title {
@@ -88,4 +94,18 @@
 
 .c-event__countdown-time {
     margin-top: 5px;
+}
+
+.c-event__finished {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    &-icon {
+        margin-top: 20px;
+        width: 30px;
+        height: 30px;
+        fill: rgb(35, 181, 35);
+    }
 }
