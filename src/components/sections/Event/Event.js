@@ -95,6 +95,12 @@ export default {
     },
   },
 
+  watch: {
+    hasEventPassed() {
+      this.isReady = true;
+    },
+  },
+
   mounted() {
     if (this.hasEventPassed) this.isReady = true;
   },
