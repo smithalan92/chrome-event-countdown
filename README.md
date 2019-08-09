@@ -1,6 +1,6 @@
 # Chrome New Tab - Event Countdown
 
-A simple chrome extension for add event countdowns which will appear in the chrome new tab screen.
+A simple chrome extension to add event countdowns which will appear in the chrome new tab screen.
 
 | [![](./images/new_tab.png)](./images/new_tab.png) | [![](./images/add_event.png)](./images/add_event.png) |
 |---|---|
