@@ -25,7 +25,7 @@ export default new Vuex.Store({
 
     UPDATE_EVENT(state, event) {
       const eventIndex = state.events.findIndex(e => e.eventId === event.eventId);
-      console.log(eventIndex);
+
       if (eventIndex > -1) {
         state.events.splice(eventIndex, 1, event);
       }

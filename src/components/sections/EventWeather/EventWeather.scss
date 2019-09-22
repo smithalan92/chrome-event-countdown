@@ -1,0 +1,33 @@
+.c-event-weather {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: absolute;
+    top: 100%;
+    width: 200px;
+    right: calc(50% - 100px);
+    padding-bottom: 45px;
+    background: rgba(#000, 0.4);
+    border-bottom-left-radius: 45%;
+    border-bottom-right-radius: 45%;
+}
+
+.c-event-weather__icon {
+    margin-bottom: 20px;
+    max-width: 100px;
+    max-height: 80px;
+
+    path {
+        fill: #fff;
+    }
+}
+
+.c-event-weather__text {
+    padding: 2px 10px;
+    text-align: center;
+}
+
+.c-event-weather__city {
+    font-weight: bold;
+    padding: 2px 12px;
+}

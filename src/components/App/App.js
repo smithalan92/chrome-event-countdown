@@ -22,11 +22,13 @@ export default {
     try {
       const events = await get('events');
 
-      events.forEach((event) => {
-        event.eventDate = new Date(event.eventDate);
-      });
+      if (events) {
+        events.forEach((event) => {
+          event.eventDate = new Date(event.eventDate);
+        });
 
-      await this.$store.dispatch('setEvents', events);
+        await this.$store.dispatch('setEvents', events);
+      }
     } catch (e) {
       console.log(e);
     }
@@ -36,9 +38,5 @@ export default {
         this.$store.dispatch('syncEvents');
       }
     });
-  },
-
-  destroyed() {
-
   },
 };

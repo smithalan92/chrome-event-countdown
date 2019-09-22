@@ -1,5 +1,6 @@
 import Countdown from '@chenfengyuan/vue-countdown';
 import format from 'date-fns/format';
+import EventWeather from '@sections/EventWeather/EventWeather.vue';
 import TrashIcon from '@/assets/icons/trash.svg';
 import EditIcon from '@/assets/icons/edit.svg';
 import CheckIcon from '@/assets/icons/check.svg';
@@ -28,10 +29,23 @@ export default {
       required: false,
       default: '',
     },
+
+    eventCountry: {
+      type: [Object, null],
+      required: false,
+      default: null,
+    },
+
+    eventCity: {
+      type: [Object, null],
+      required: false,
+      default: null,
+    },
   },
 
   components: {
     Countdown,
+    EventWeather,
     TrashIcon,
     EditIcon,
     CheckIcon,
@@ -91,6 +105,8 @@ export default {
         eventName: this.eventName,
         eventDate: this.eventDate.toISOString(),
         eventBackgroundImage: this.background,
+        eventCountry: this.eventCountry,
+        eventCity: this.eventCity,
       });
     },
   },

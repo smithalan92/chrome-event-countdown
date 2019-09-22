@@ -20,6 +20,25 @@
         </div>
         <div class="c-add-event__body">
           <div class="c-add-event__row">
+            <span class="c-add-event__label">Event Country</span>
+            <v-select
+              :options="countries"
+              v-model="selectedCountry"
+              placeholder="Type to search countries"
+              label="name"></v-select>
+          </div>
+          <div
+            class="c-add-event__row"
+            v-if="this.selectedCountry">
+            <span class="c-add-event__label">Event City</span>
+            <v-select
+              :options="cities"
+              v-model="selectedCity"
+              placeholder="Type to search cities"
+              @search="loadCities"
+              label="name"></v-select>
+          </div>
+          <div class="c-add-event__row">
             <span class="c-add-event__label">Event Name</span>
             <input
               ref="name"
