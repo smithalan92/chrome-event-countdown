@@ -19,6 +19,9 @@
         </div>
       </div>
       <span class="c-event__title" v-if="isReady">{{ eventName }}</span>
+      <event-weather
+        :event-city="eventCity"
+        :event-country="eventCountry"/>
       <countdown
         v-if="!hasEventPassed"
         :time="countdownDate"

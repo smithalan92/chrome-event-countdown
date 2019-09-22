@@ -10,6 +10,8 @@
             :event-id="event.eventId"
             :event-name="event.eventName"
             :event-date="event.eventDate"
+            :event-country="event.eventCountry"
+            :event-city="event.eventCity"
             :background="event.background"/>
       </dragable>
     </div>
