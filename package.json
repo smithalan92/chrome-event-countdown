@@ -1,7 +1,8 @@
 {
   "name": "chrome-event-countdown",
-  "version": "0.1.0",
-  "private": true,
+  "version": "1.1.0",
+  "author": "Alan Smith",
+  "license": "MIT",
   "scripts": {
     "start": "vue-cli-service serve --open",
     "build": "bash ./build.sh",
