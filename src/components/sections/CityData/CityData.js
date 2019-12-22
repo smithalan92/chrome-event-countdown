@@ -2,10 +2,11 @@
 /* eslint-disable object-shorthand */
 
 import axios from 'axios';
+import moment from 'moment-timezone';
 import WeatherIcon from './WeatherIcon';
 
 export default {
-  name: 'EventWeather',
+  name: 'CityData',
 
   props: {
     eventCountry: {
@@ -24,6 +25,8 @@ export default {
   data() {
     return {
       weather: null,
+      triggerInt: true,
+      localTime: '',
     };
   },
 
@@ -31,6 +34,14 @@ export default {
     async getCurrentWeather() {
       const { data } = await axios.get(`http://eventcountdownapi.mralansmith.com/api/weather/${this.eventCity.id}`);
       this.weather = data;
+    },
+
+    triggerTimeUpdate() {
+      this.localTime = moment().tz(this.eventCity.timezoneName).format('h:mma');
+
+      setTimeout(() => {
+        window.requestAnimationFrame(() => this.triggerTimeUpdate());
+      }, 10000);
     },
   },
 
@@ -47,6 +58,10 @@ export default {
   mounted() {
     if (this.eventCity) {
       this.getCurrentWeather();
+
+      if (this.eventCity.timezoneName) {
+        this.triggerTimeUpdate();
+      }
     }
   },
 };

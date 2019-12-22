@@ -19,7 +19,7 @@
         </div>
       </div>
       <span class="c-event__title" v-if="isReady">{{ eventName }}</span>
-      <event-weather
+      <city-data
         :event-city="eventCity"
         :event-country="eventCountry"/>
       <countdown

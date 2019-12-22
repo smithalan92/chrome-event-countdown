@@ -1,6 +1,6 @@
 import Countdown from '@chenfengyuan/vue-countdown';
 import format from 'date-fns/format';
-import EventWeather from '@sections/EventWeather/EventWeather.vue';
+import CityData from '@sections/CityData/CityData.vue';
 import TrashIcon from '@/assets/icons/trash.svg';
 import EditIcon from '@/assets/icons/edit.svg';
 import CheckIcon from '@/assets/icons/check.svg';
@@ -45,7 +45,7 @@ export default {
 
   components: {
     Countdown,
-    EventWeather,
+    CityData,
     TrashIcon,
     EditIcon,
     CheckIcon,
