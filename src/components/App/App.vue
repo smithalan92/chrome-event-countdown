@@ -1,6 +1,7 @@
 <template>
   <div class="c-app">
-    <event-list/>
+    <event-list v-if="hasEvents"/>
+    <blank-slate v-else/>
     <div
       class="c-app__add-event"
       @click="openAddEvent">
