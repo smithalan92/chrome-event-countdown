@@ -69,6 +69,8 @@ export default {
       this.eventName = '';
       this.eventDate = '';
       this.eventBackgroundImage = '';
+      this.selectedCountry = null;
+      this.selectedCity = null;
     },
 
     onClickConfirm() {
