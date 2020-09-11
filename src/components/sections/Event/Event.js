@@ -59,7 +59,7 @@ export default {
       minuteString: '',
       secondString: '',
       isReady: false,
-      formatedEventDate: format(this.eventDate, 'DD MMMM YYYY, h:mma'),
+      formatedEventDate: format(this.eventDate, 'dd MMMM yyyy, h:mma'),
     };
   },
 
