@@ -1,0 +1,19 @@
+{
+  "name": "New Tab - Events Countdown",
+  "author": "Alan Smith <alan@mralansmith.com>",
+  "description": "Overrides the new tab page with a customisable event countdown page. Add multiple events to count down from!",
+  "version": "1.3.0",
+  "incognito": "split",
+  "chrome_url_overrides": {
+    "newtab": "index.html"
+  },
+  "manifest_version": 2,
+  "permissions": [
+    "storage"
+  ],
+  "icons": {
+    "16": "./16x16.png",
+    "48": "./48x48.png",
+   "128": "./128x128.png"
+  }
+}

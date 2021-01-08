@@ -1,0 +1,49 @@
+@import url('https://fonts.googleapis.com/css?family=Muli:400,700&display=swap');
+// @import "../../../node_modules/vue2-animate/src/sass/vue2-animate.scss";
+// @import "vue-select/src/scss/vue-select.scss";
+
+html,
+body,
+#app,
+.c-app {
+    height: 100%;
+    padding: 0;
+    margin: 0;
+}
+
+body {
+    font-family: 'Muli', sans-serif;
+    background-color: #000;
+    color: #474747;
+}
+
+.c-app {
+    display: flex;
+    flex-direction: column;
+}
+
+.c-app__add-event {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 35px;
+    height: 35px;
+    background: #474747;
+    border-radius: 50%;
+    position: absolute;
+    bottom: 30px;
+    right: 30px;
+    cursor: pointer;
+
+    &:hover {
+        .c-app__add-event-icon {
+            fill: rgba(#fff, 0.7);
+        }
+    }
+
+    .c-app__add-event-icon {
+        width: 20px;
+        height: 20px;
+        fill: #fff;
+    }
+}

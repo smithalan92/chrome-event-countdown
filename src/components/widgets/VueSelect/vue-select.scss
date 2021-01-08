@@ -1,0 +1,129 @@
+$vue-select-dropdown-bg: #fff;
+$vue-select-placeholder-colour: #6d6d6d;
+$vue-select-icon-colour: #6d6d6d;
+$vue-select-border-color: #9e9c9c;
+$vue-select-item-selected-color: #d7e8ff;
+
+.vue-select {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  background: $vue-select-dropdown-bg;
+  border: 1px solid $vue-select-border-color;
+  min-height: 30px;
+  border-radius: 4px;
+  font-family: Tahoma, Geneva, sans-serif;
+  font-size: 13px;
+
+  input {
+    border: 0;
+    padding: 0;
+    margin: 0;
+    outline: 0;
+    flex: 1;
+
+    &:disabled {
+      background: $vue-select-dropdown-bg;
+    }
+  }
+}
+
+.vue-select__selected {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  user-select: none;
+  background: $vue-select-dropdown-bg;
+  border-radius: 4px;
+}
+
+.vue-select__selected-items {
+  flex: 1;
+  display: flex;
+  padding: 4px 8px;
+  flex-wrap: wrap;
+}
+
+.vue-select__input {
+  color: $vue-select-placeholder-colour;
+}
+
+.vue-select__selected-item {
+  display: flex;
+  align-items: center;
+}
+
+.vue-select__option-item-label {
+  flex: 1;
+}
+
+.vue-select__selected-dropdown-arrow {
+  padding: 4px 8px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.vue-select__selected-dropdown-icon {
+  fill: $vue-select-icon-colour;
+  width: 15px;
+}
+
+.vue-select__selected-dropdown-icon--open {
+  transform: rotate(180deg);
+}
+
+.vue-select__options-wrapper {
+  position: relative;
+}
+
+.vue-select__options {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid $vue-select-border-color;
+  border-top: 0;
+  box-shadow: 18px 21px 39px -22px rgba(0, 0, 0, 0.46);
+  z-index: 1;
+  background: $vue-select-dropdown-bg;
+  position: absolute;
+  top: -2px;
+  left: -1px;
+  right: -1px;
+  width: 100%;
+  max-height: 200px;
+  overflow-y: scroll;
+}
+
+.vue-select__option-item {
+  display: flex;
+  align-items: center;
+  padding: 4px 8px;
+  height: 30px;
+  min-height: 30px;
+  cursor: pointer;
+  user-select: none;
+
+  &:hover {
+    background: darken($vue-select-dropdown-bg, 5%);
+  }
+
+  &:last-child {
+    border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 4px;
+  }
+
+  &--selected {
+    background: $vue-select-item-selected-color;
+
+    &:hover {
+      background: lighten($vue-select-item-selected-color, 2%);
+    }
+  }
+}
+
+.vue-select__option-item-label {
+  flex: 1;
+}
+
+.vue-select__option-item-remove-icon {
+  width: 10px;
+}
