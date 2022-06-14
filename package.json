@@ -11,7 +11,7 @@
     "@chenfengyuan/vue-countdown": "^1.1.5",
     "axios": "^0.20.0",
     "date-fns": "^2.16.1",
-    "lodash": "^4.17.20",
+    "lodash": "^4.17.21",
     "luxon": "^1.25.0",
     "moment-timezone": "^0.5.31",
     "v-click-outside": "^3.1.1",
