@@ -32,7 +32,7 @@ export default {
   methods: {
     async getCurrentWeather() {
       const { data } = await axios.get(
-        `http://localhost:3400/api/weather/${this.eventCity.id}`
+        `http://eventcountdownapi.mralansmith.com/api/weather/${this.eventCity.id}`
       );
       this.weather = data;
     },

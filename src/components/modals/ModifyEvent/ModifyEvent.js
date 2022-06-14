@@ -149,7 +149,7 @@ export default {
     },
 
     async loadCountries() {
-      const { data } = await axios.get('http://eventcountdownapi.mralansmith.com/api/countries');
+      const { data } = await axios.get('https://eventcountdownapi.mralansmith.com/api/countries');
       this.countries = data.countries;
     },
 
@@ -162,7 +162,7 @@ export default {
         const params = { limit: 15 };
         if (search) params.searchTerm = search;
 
-        const { data } = await axios.get(`http://eventcountdownapi.mralansmith.com/api/countries/${self.selectedCountry.id}/cities`, {
+        const { data } = await axios.get(`https://eventcountdownapi.mralansmith.com/api/countries/${self.selectedCountry.id}/cities`, {
           cancelToken: currentCancelToken.token,
           params,
         });
