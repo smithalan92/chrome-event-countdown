@@ -4,7 +4,7 @@
     v-if="weather">
       <weather-icon
         class="c-city-data__icon"
-        :icon="weather.icon"/>
+        :icon="weather.icon" :is-day="weather.isDay"/>
       <span
         class="c-city-data__text"
         v-if="localTime">{{ localTime }}</span>
