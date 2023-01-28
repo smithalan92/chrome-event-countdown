@@ -78,8 +78,10 @@ export default {
   bottom: 75px;
   right: 10px;
   background: #fff;
-  padding: 16px 0;
+  padding: 4px 0;
   border-radius: 4px;
+  font-size: 16px;
+  font-weight: 500;
 
   ul {
     list-style-type: none;
@@ -93,6 +95,10 @@ export default {
 
     &:hover {
       background-color: darken(white, 10%);
+    }
+
+    &:first-child {
+      border-bottom: 1px solid  darken(white, 10%);
     }
   }
 }
