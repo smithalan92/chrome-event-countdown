@@ -11,6 +11,11 @@ export default new Vuex.Store({
   },
 
   mutations: {
+    RESTORE_STATE(state, data) {
+      state.events = data.events || [];
+      state.notes = data.notes || [];
+    },
+
     ADD_EVENT(state, event) {
       state.events.push(event);
     },
@@ -18,10 +23,6 @@ export default new Vuex.Store({
     REMOVE_EVENT(state, eventId) {
       const index = state.events.findIndex((event) => event.eventId === eventId);
       state.events.splice(index, 1);
-    },
-
-    SET_EVENTS(state, events) {
-      state.events = events;
     },
 
     UPDATE_EVENT(state, event) {
@@ -40,15 +41,20 @@ export default new Vuex.Store({
       const index = state.notes.findIndex((note) => note.id === id);
       state.notes.splice(index, 1);
     },
-
-    SET_NOTES(state, notes) {
-      state.notes = notes;
-    },
   },
 
   actions: {
-    setEvents({ commit }, events) {
-      commit('SET_EVENTS', events);
+    syncState({ state }) {
+      const data = {
+        events: state.events,
+        notes: state.notes,
+      };
+
+      set('data', data);
+    },
+
+    restoreState({ commit }, data) {
+      commit('RESTORE_STATE', data);
     },
 
     addEvent({ commit }, event) {
@@ -59,16 +65,8 @@ export default new Vuex.Store({
       commit('REMOVE_EVENT', eventId);
     },
 
-    syncEvents({ state }) {
-      set('events', state.events);
-    },
-
     updateEvent({ commit }, event) {
       commit('UPDATE_EVENT', event);
-    },
-
-    setNotes({ commit }, notes) {
-      commit('SET_NOTES', notes);
     },
 
     addNote({ commit }, note) {
@@ -77,10 +75,6 @@ export default new Vuex.Store({
 
     removeNote({ commit }, id) {
       commit('REMOVE_NOTE', id);
-    },
-
-    syncNotes({ state }) {
-      set('notes', state.notes);
     },
 
     openAddEventModal() {},

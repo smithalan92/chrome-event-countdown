@@ -36,3 +36,11 @@ export function set(key, value) {
     localStorage.setItem(key, stringifiedValue);
   }
 }
+
+export function del(key) {
+  if (process.env.NODE_ENV === 'production') {
+    chrome.storage.local.remove(key);
+  } else {
+    localStorage.removeItem(key);
+  }
+}

@@ -4,6 +4,7 @@ import BlankSlate from '@sections/EventListBlankSlate/EventListBlankSlate.vue';
 import { get } from '@/utils/storage';
 import AddPopover from '@/components/widgets/AddPopover/AddPopover.vue';
 import AddStickyNote from '@modals/AddStickyNote/AddStickyNote.vue';
+import { STORE_EVENTS_TO_SYNC } from '@/constants';
 import StickyNotes from '../sections/StickyNotes/StickyNotes.vue';
 
 export default {
@@ -32,29 +33,23 @@ export default {
 
   async created() {
     try {
-      const events = await get('events');
-      const notes = await get('notes');
+      const data = await get('data');
 
-      if (events) {
-        events.forEach((event) => {
-          event.eventDate = new Date(event.eventDate);
-        });
-
-        await this.$store.dispatch('setEvents', events);
-      }
-
-      if (notes) {
-        await this.$store.dispatch('setNotes', notes);
+      if (data) {
+        if (data.events) {
+          data.events.forEach((event) => {
+            event.eventDate = new Date(event.eventDate);
+          });
+        }
+        await this.$store.dispatch('restoreState', data);
       }
     } catch (e) {
       console.log(e);
     }
 
     this.$store.subscribe((mutation) => {
-      if (['SET_EVENTS', 'ADD_EVENT', 'REMOVE_EVENT', 'UPDATE_EVENT'].includes(mutation.type)) {
-        this.$store.dispatch('syncEvents');
-      } else if (['SET_NOTES', 'ADD_NOTE', 'REMOVE_NOTE'].includes(mutation.type)) {
-        this.$store.dispatch('syncNotes');
+      if (STORE_EVENTS_TO_SYNC.includes(mutation.type)) {
+        this.$store.dispatch('syncState');
       }
     });
   },
