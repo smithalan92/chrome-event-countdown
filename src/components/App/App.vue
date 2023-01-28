@@ -2,12 +2,10 @@
   <div class="c-app">
     <event-list v-if="hasEvents"/>
     <blank-slate v-else/>
-    <div
-      class="c-app__add-event"
-      @click="openAddEvent">
-      <plus-icon class="c-app__add-event-icon"/>
-    </div>
+    <StickyNotes />
+    <AddPopover />
     <modify-event/>
+    <add-sticky-note />
   </div>
 </template>
 <script src="./App.js"></script>
