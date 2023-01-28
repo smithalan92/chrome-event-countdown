@@ -7,8 +7,8 @@ export async function get(key) {
   return new Promise((resolve, reject) => {
     if (process.env.NODE_ENV === 'production') {
       chrome.storage.local.get(key, (result) => {
-        if (result && result.events) {
-          resolve(JSON.parse(result.events));
+        if (result && result[key]) {
+          resolve(JSON.parse(result[key]));
         } else {
           resolve([]);
         }
