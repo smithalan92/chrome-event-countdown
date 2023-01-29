@@ -1,20 +1,26 @@
 <template>
   <div class="s-sticky-note">
-    <div
-      class="s-sticky-note__delete"
-      @click="deleteNote">
-      <close-icon class="s-sticky-note__delete-icon"/>
+    <div class="s-sticky-note__delete" @click="deleteNote">
+      <close-icon class="s-sticky-note__delete-icon" />
     </div>
     <div class="s-sticky-note__text">
-      <input :value="note.text" class="s-sticky-note__text-input" @input="updateNote"/>
+      <input
+        :value="note.text"
+        class="s-sticky-note__text-input"
+        @input="updateNote"
+      />
     </div>
   </div>
 </template>
 <script>
-import CloseIcon from '@/assets/icons/close.svg';
+import CloseIcon from "../../../assets/icons/close.svg";
 
 export default {
-  name: 'StickyNote',
+  name: "StickyNote",
+
+  components: {
+    CloseIcon,
+  },
 
   props: {
     note: {
@@ -23,18 +29,16 @@ export default {
     },
   },
 
-  components: {
-    CloseIcon,
-  },
+  emits: ["delete", "update"],
 
   methods: {
     deleteNote() {
-      this.$emit('delete', this.note.id);
+      this.$emit("delete", this.note.id);
     },
 
     updateNote(e) {
       const newText = e.target.value;
-      this.$emit('update', { noteId: this.note.id, text: newText });
+      this.$emit("update", { noteId: this.note.id, text: newText });
     },
   },
 };

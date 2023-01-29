@@ -1,14 +1,15 @@
-import EventList from '@sections/EventList/EventList.vue';
-import ModifyEvent from '@modals/ModifyEvent/ModifyEvent.vue';
-import BlankSlate from '@sections/EventListBlankSlate/EventListBlankSlate.vue';
-import { get } from '@/utils/storage';
-import AddPopover from '@/components/widgets/AddPopover/AddPopover.vue';
-import AddStickyNote from '@modals/AddStickyNote/AddStickyNote.vue';
-import { STORE_EVENTS_TO_SYNC } from '@/constants';
-import StickyNotes from '../sections/StickyNotes/StickyNotes.vue';
+import EventList from "../sections/EventList/EventList.vue";
+import ModifyEvent from "../modals/ModifyEvent/ModifyEvent.vue";
+import BlankSlate from "../sections/EventListBlankSlate/EventListBlankSlate.vue";
+import { get } from "../../utils/storage";
+import AddPopover from "../widgets/AddPopover/AddPopover.vue";
+import AddStickyNote from "../modals/AddStickyNote/AddStickyNote.vue";
+import { STORE_EVENTS_TO_SYNC } from "../../constants";
+import StickyNotes from "../sections/StickyNotes/StickyNotes.vue";
 
+// @vue/component
 export default {
-  name: 'App',
+  name: "App",
 
   components: {
     EventList,
@@ -25,15 +26,9 @@ export default {
     },
   },
 
-  methods: {
-    openAddEvent() {
-      this.$store.dispatch('openAddEventModal');
-    },
-  },
-
   async created() {
     try {
-      const data = await get('data');
+      const data = await get("data");
 
       if (data) {
         if (data.events) {
@@ -41,7 +36,7 @@ export default {
             event.eventDate = new Date(event.eventDate);
           });
         }
-        await this.$store.dispatch('restoreState', data);
+        await this.$store.dispatch("restoreState", data);
       }
     } catch (e) {
       console.log(e);
@@ -49,8 +44,14 @@ export default {
 
     this.$store.subscribe((mutation) => {
       if (STORE_EVENTS_TO_SYNC.includes(mutation.type)) {
-        this.$store.dispatch('syncState');
+        this.$store.dispatch("syncState");
       }
     });
+  },
+
+  methods: {
+    openAddEvent() {
+      this.$store.dispatch("openAddEventModal");
+    },
   },
 };

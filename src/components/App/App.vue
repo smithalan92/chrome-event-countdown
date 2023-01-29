@@ -1,10 +1,10 @@
 <template>
   <div class="c-app">
-    <event-list v-if="hasEvents"/>
-    <blank-slate v-else/>
+    <event-list v-if="hasEvents" />
+    <blank-slate v-else />
     <StickyNotes />
     <AddPopover />
-    <modify-event/>
+    <modify-event />
     <add-sticky-note />
   </div>
 </template>

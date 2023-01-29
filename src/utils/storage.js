@@ -5,7 +5,7 @@ export async function get(key) {
   let value = null;
 
   return new Promise((resolve, reject) => {
-    if (process.env.NODE_ENV === 'production') {
+    if (process.env.NODE_ENV === "production") {
       chrome.storage.local.get(key, (result) => {
         if (result && result[key]) {
           resolve(JSON.parse(result[key]));
@@ -30,7 +30,7 @@ export async function get(key) {
 export function set(key, value) {
   const stringifiedValue = JSON.stringify(value);
 
-  if (process.env.NODE_ENV === 'production') {
+  if (process.env.NODE_ENV === "production") {
     chrome.storage.local.set({ [key]: stringifiedValue });
   } else {
     localStorage.setItem(key, stringifiedValue);
@@ -38,7 +38,7 @@ export function set(key, value) {
 }
 
 export function del(key) {
-  if (process.env.NODE_ENV === 'production') {
+  if (process.env.NODE_ENV === "production") {
     chrome.storage.local.remove(key);
   } else {
     localStorage.removeItem(key);

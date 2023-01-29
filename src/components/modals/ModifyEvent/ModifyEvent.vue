@@ -1,50 +1,48 @@
 <template>
-  <div
-    class="c-add-event__overlay"
-    v-if="isOverlayVisible">
+  <div v-if="isOverlayVisible" class="c-add-event__overlay">
     <transition name="slideDown">
       <div
+        v-if="isVisible"
+        v-click-outside="close"
         class="c-add-event"
         style="animation-duration: 0.5s"
-        v-click-outside="close"
-        v-if="isVisible">
+      >
         <div class="c-add-event__header">
           <div class="c-add-event__header-title">
-            {{ mode === 'edit' ? `Edit ${eventName}` : 'Add New Event' }}
+            {{ mode === "edit" ? `Edit ${eventName}` : "Add New Event" }}
           </div>
-          <div
-            class="c-add-event__header-close"
-            @click="close">
-            <close-icon class="c-add-event__header-close-icon"/>
+          <div class="c-add-event__header-close" @click="close">
+            <close-icon class="c-add-event__header-close-icon" />
           </div>
         </div>
         <div class="c-add-event__body">
           <div class="c-add-event__row">
             <span class="c-add-event__label">Event Country</span>
             <v-select
-              :options="countries"
               v-model="selectedCountry"
+              :options="countries"
               placeholder="Type to search countries"
-              label="name"></v-select>
+              label="name"
+            ></v-select>
           </div>
-          <div
-            class="c-add-event__row"
-            v-if="this.selectedCountry">
+          <div v-if="selectedCountry" class="c-add-event__row">
             <span class="c-add-event__label">Event City</span>
             <v-select
-              :options="cities"
               v-model="selectedCity"
+              :options="cities"
               placeholder="Type to search cities"
+              label="name"
               @search="loadCities"
-              label="name"></v-select>
+            ></v-select>
           </div>
           <div class="c-add-event__row">
             <span class="c-add-event__label">Event Name</span>
             <input
               ref="name"
+              v-model="eventName"
               class="c-add-event__input"
               type="text"
-              v-model="eventName"/>
+            />
           </div>
           <div class="c-add-event__row">
             <span class="c-add-event__label">Event Date</span>
@@ -54,41 +52,40 @@
             <span class="c-add-event__label">Image</span>
             <div class="c-add-event__input-extra">
               <input
+                v-model="eventBackgroundImage"
                 class="c-add-event__input"
                 type="url"
-                v-model="eventBackgroundImage"/>
+              />
               <span class="c-add-event__input-label">
-                Paste a URL to an image here. If empty, a random image will be used.
+                Paste a URL to an image here. If empty, a random image will be
+                used.
               </span>
             </div>
           </div>
           <transition name="zoom">
-            <div
-              class="c-add-event__image-preview"
-              v-if="eventBackgroundImage">
-              <img
-                class="c-add-event__image"
-                :src="eventBackgroundImage"/>
+            <div v-if="eventBackgroundImage" class="c-add-event__image-preview">
+              <img class="c-add-event__image" :src="eventBackgroundImage" />
             </div>
-            </transition>
+          </transition>
         </div>
         <div class="c-add-event__footer">
           <button
             class="c-add-event__button c-add-event__button--cancel"
-            @click="onClickCancel">
+            @click="onClickCancel"
+          >
             Cancel
           </button>
           <button
             class="c-add-event__button c-add-event__button--add"
             :disabled="isSaveButtonDisabled"
-            @click="onClickConfirm">
-            {{ mode === 'edit' ? `Update` : 'Add' }}
+            @click="onClickConfirm"
+          >
+            {{ mode === "edit" ? `Update` : "Add" }}
           </button>
         </div>
       </div>
     </transition>
-    <global-events
-      @keydown.esc="close"/>
+    <global-events @keydown.esc="close" />
   </div>
 </template>
 <script src="./ModifyEvent.js"></script>

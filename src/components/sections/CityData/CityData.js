@@ -4,28 +4,29 @@ import axios from "axios";
 import moment from "moment-timezone";
 import WeatherIcon from "./WeatherIcon";
 
+// @vue/component
 export default {
   name: "CityData",
 
   props: {
     eventCountry: {
-      required: false
+      required: false,
     },
 
     eventCity: {
-      required: false
-    }
+      required: false,
+    },
   },
 
   components: {
-    WeatherIcon
+    WeatherIcon,
   },
 
   data() {
     return {
       weather: null,
       triggerInt: true,
-      localTime: ""
+      localTime: "",
     };
   },
 
@@ -38,24 +39,22 @@ export default {
     },
 
     triggerTimeUpdate() {
-      this.localTime = moment()
-        .tz(this.eventCity.timezoneName)
-        .format("h:mma");
+      this.localTime = moment().tz(this.eventCity.timezoneName).format("h:mma");
 
       setTimeout(() => {
         window.requestAnimationFrame(() => this.triggerTimeUpdate());
       }, 10000);
-    }
+    },
   },
 
   watch: {
-    "eventCity.id": function(newValue) {
+    "eventCity.id": function (newValue) {
       if (newValue) {
         this.getCurrentWeather();
       } else {
         this.weather = null;
       }
-    }
+    },
   },
 
   mounted() {
@@ -66,5 +65,5 @@ export default {
         this.triggerTimeUpdate();
       }
     }
-  }
+  },
 };

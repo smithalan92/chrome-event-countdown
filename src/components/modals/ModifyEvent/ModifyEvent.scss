@@ -24,7 +24,7 @@
 
     .vs__search {
         &::placeholder {
-            color: #c6c6c6
+            color: #c6c6c6;
         }
     }
 
@@ -149,7 +149,7 @@
     &:disabled {
         background: rgb(92, 92, 92) !important;
         cursor: not-allowed;
-      }
+    }
 
     &:hover {
         text-decoration: underline;
@@ -161,8 +161,8 @@
         color: #fff;
 
         &:hover {
-        text-decoration: none;
-        background: rgba(19, 152, 19, 0.8);
+            text-decoration: none;
+            background: rgba(19, 152, 19, 0.8);
         }
     }
 

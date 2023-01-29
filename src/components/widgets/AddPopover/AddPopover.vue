@@ -1,11 +1,13 @@
 <template>
   <div class="w-add-popover__add-event">
-    <div
-      class="w-add-popover__button"
-      @click="togglePopover">
-      <plus-icon class="w-add-popover__add-event-icon"/>
+    <div class="w-add-popover__button" @click="togglePopover">
+      <plus-icon class="w-add-popover__add-event-icon" />
     </div>
-    <div class="w-add-popover__popup" v-if="isPopoverOpen" v-click-outside="togglePopover">
+    <div
+      v-if="isPopoverOpen"
+      v-click-outside="togglePopover"
+      class="w-add-popover__popup"
+    >
       <ul>
         <li @click="openAddEvent">Add Event</li>
         <li @click="openAddNote">Add Note</li>
@@ -14,10 +16,10 @@
   </div>
 </template>
 <script>
-import PlusIcon from '@/assets/icons/plus.svg';
+import PlusIcon from "../../../assets/icons/plus.svg";
 
 export default {
-  name: 'AddPopover',
+  name: "AddPopover",
 
   components: {
     PlusIcon,
@@ -31,12 +33,12 @@ export default {
 
   methods: {
     openAddEvent() {
-      this.$store.dispatch('openAddEventModal');
+      this.$store.dispatch("openAddEventModal");
       this.isPopoverOpen = false;
     },
 
     openAddNote() {
-      this.$store.dispatch('openAddStickyNoteModal');
+      this.$store.dispatch("openAddStickyNoteModal");
       this.isPopoverOpen = false;
     },
 
@@ -48,29 +50,29 @@ export default {
 </script>
 <style lang="scss">
 .w-add-popover__button {
-    position: absolute;
-    bottom: 30px;
-    right: 30px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 35px;
-    height: 35px;
-    background: #474747;
-    border-radius: 50%;
-    cursor: pointer;
+  position: absolute;
+  bottom: 30px;
+  right: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 35px;
+  height: 35px;
+  background: #474747;
+  border-radius: 50%;
+  cursor: pointer;
 
-    &:hover {
-        .w-add-popover__add-event-icon {
-            fill: rgba(#fff, 0.7);
-        }
-    }
-
+  &:hover {
     .w-add-popover__add-event-icon {
-        width: 20px;
-        height: 20px;
-        fill: #fff;
+      fill: rgba(#fff, 0.7);
     }
+  }
+
+  .w-add-popover__add-event-icon {
+    width: 20px;
+    height: 20px;
+    fill: #fff;
+  }
 }
 
 .w-add-popover__popup {
@@ -98,7 +100,7 @@ export default {
     }
 
     &:first-child {
-      border-bottom: 1px solid  darken(white, 10%);
+      border-bottom: 1px solid darken(white, 10%);
     }
   }
 }
