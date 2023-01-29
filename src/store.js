@@ -37,6 +37,14 @@ export default new Vuex.Store({
       state.notes.push(note);
     },
 
+    UPDATE_NOTE(state, { noteId, text }) {
+      const noteIndex = state.notes.findIndex((n) => n.id === noteId);
+      const note = state.notes[noteIndex];
+      if (noteIndex > -1) {
+        state.notes.splice(noteIndex, 1, { ...note, text });
+      }
+    },
+
     REMOVE_NOTE(state, id) {
       const index = state.notes.findIndex((note) => note.id === id);
       state.notes.splice(index, 1);
@@ -71,6 +79,10 @@ export default new Vuex.Store({
 
     addNote({ commit }, note) {
       commit('ADD_NOTE', note);
+    },
+
+    updateNote({ commit }, { noteId, text }) {
+      commit('UPDATE_NOTE', { noteId, text });
     },
 
     removeNote({ commit }, id) {

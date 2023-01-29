@@ -6,7 +6,7 @@
       <close-icon class="s-sticky-note__delete-icon"/>
     </div>
     <div class="s-sticky-note__text">
-      {{ note.text }}
+      <input :value="note.text" class="s-sticky-note__text-input" @input="updateNote"/>
     </div>
   </div>
 </template>
@@ -30,6 +30,11 @@ export default {
   methods: {
     deleteNote() {
       this.$emit('delete', this.note.id);
+    },
+
+    updateNote(e) {
+      const newText = e.target.value;
+      this.$emit('update', { noteId: this.note.id, text: newText });
     },
   },
 };
@@ -70,5 +75,12 @@ export default {
 
 .s-sticky-note__text {
   margin-top: 16px;
+}
+
+.s-sticky-note__text-input {
+  outline: none;
+  border: 0;
+  background: transparent;
+  width: 100%;
 }
 </style>

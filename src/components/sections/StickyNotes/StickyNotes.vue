@@ -1,6 +1,6 @@
 <template>
   <div class="s-sticky-notes">
-    <StickyNote v-for="note in notes" :key="note.id" :note="note" @delete="deleteNote"/>
+    <StickyNote v-for="note in notes" :key="note.id" :note="note" @delete="deleteNote" @update="updateNote"/>
   </div>
 </template>
 <script>
@@ -22,6 +22,10 @@ export default {
   methods: {
     deleteNote(noteId) {
       this.$store.dispatch('removeNote', noteId);
+    },
+
+    updateNote({ noteId, text }) {
+      this.$store.dispatch('updateNote', { noteId, text });
     },
   },
 };
