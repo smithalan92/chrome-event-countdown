@@ -6,6 +6,7 @@ import Snow from '@/assets/icons/weather/snow.svg';
 import ClearDay from '@/assets/icons/weather/clear_day.svg';
 import ClearNight from '@/assets/icons/weather/clear_night.svg';
 import Thunder from '@/assets/icons/weather/thunder.svg';
+import { h } from 'vue';
 
 export default {
   name: 'WeatherIcon',
@@ -21,7 +22,7 @@ export default {
     },
   },
 
-  render(h) {
+  render() {
     switch (this.icon) {
       case 'clear':
         return this.isDay ? h(ClearDay) : h(ClearNight);

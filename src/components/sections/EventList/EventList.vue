@@ -1,15 +1,15 @@
 <template>
   <div class="c-event-list">
-    <dragable v-model="events" group="events" @start="drag=true" @end="drag=false" class="c-event-list__dragable">
+    <dragable v-model="events" item-key="id" group="events" @start="drag=true" @end="drag=false" class="c-event-list__dragable">
+      <template #item="{element}" #>
         <event
-          v-for="event in events"
-          :key="event.name"
-          :event-id="event.eventId"
-          :event-name="event.eventName"
-          :event-date="event.eventDate"
-          :event-country="event.eventCountry"
-          :event-city="event.eventCity"
-          :background="event.background"/>
+          :event-id="element.eventId"
+          :event-name="element.eventName"
+          :event-date="element.eventDate"
+          :event-country="element.eventCountry"
+          :event-city="element.eventCity"
+          :background="element.background"/>
+      </template>
     </dragable>
   </div>
 </template>

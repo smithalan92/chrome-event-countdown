@@ -42,7 +42,7 @@
 </template>
 <script>
 /* eslint-disable func-names */
-import GlobalEvents from 'vue-global-events';
+import { GlobalEvents } from 'vue-global-events';
 import CloseIcon from '@/assets/icons/close.svg';
 
 export default {

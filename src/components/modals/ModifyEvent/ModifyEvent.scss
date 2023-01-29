@@ -144,6 +144,12 @@
     background: #fff;
     font-size: 13px;
     padding: 5px 20px;
+    border: 0;
+
+    &:disabled {
+        background: rgb(92, 92, 92) !important;
+        cursor: not-allowed;
+      }
 
     &:hover {
         text-decoration: underline;

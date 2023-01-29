@@ -1,13 +1,22 @@
-import Vue from 'vue';
+import { createApp } from 'vue'
 import vClickOutside from 'v-click-outside';
 import App from '@/components/App/App.vue';
 import store from './store';
 
-Vue.config.productionTip = false;
+const app = createApp(App);
 
-Vue.use(vClickOutside);
+app.use(store);
 
-new Vue({
-  store,
-  render(h) { return h(App); },
-}).$mount('#app');
+// vCLickOutside doesnt have vue-3 compatable directive bindings
+// even though it supports vue 3, probably a bug
+const { bind, unbind } = vClickOutside.directive;
+app.directive('click-outside', {
+  mounted(el, bindling) {
+    bind(el, { value: bindling.value });
+  },
+  beforeUnmount(el) {
+    unbind(el);
+  },
+});
+
+app.mount('#app');

@@ -1,13 +1,12 @@
 @import url('https://fonts.googleapis.com/css?family=Muli:400,700&display=swap');
-@import "../../../node_modules/vue2-animate/src/sass/vue2-animate.scss";
-@import "vue-select/src/scss/vue-select.scss";
+@import "vue-select/dist/vue-select.css";
 
 html,
 body,
 .c-app {
     display: flex;
     flex-direction: column;
-    height: 100%;
+    height: 100vh;
     padding: 0;
     margin: 0;
     overflow: hidden;

@@ -48,9 +48,7 @@
           </div>
           <div class="c-add-event__row">
             <span class="c-add-event__label">Event Date</span>
-            <datetime
-              type="datetime"
-              v-model="eventDate"/>
+            <Datepicker v-model="eventDate" />
           </div>
           <div class="c-add-event__row">
             <span class="c-add-event__label">Image</span>
@@ -75,16 +73,17 @@
             </transition>
         </div>
         <div class="c-add-event__footer">
-          <div
+          <button
             class="c-add-event__button c-add-event__button--cancel"
             @click="onClickCancel">
             Cancel
-          </div>
-          <div
+          </button>
+          <button
             class="c-add-event__button c-add-event__button--add"
+            :disabled="isSaveButtonDisabled"
             @click="onClickConfirm">
             {{ mode === 'edit' ? `Update` : 'Add' }}
-          </div>
+          </button>
         </div>
       </div>
     </transition>

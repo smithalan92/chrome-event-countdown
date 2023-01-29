@@ -1,12 +1,13 @@
 /* eslint-disable func-names */
 
-import { Datetime } from 'vue-datetime';
+// import { Datetime } from 'vue-datetime';
 import axios from 'axios';
-import GlobalEvents from 'vue-global-events';
+import { GlobalEvents } from 'vue-global-events';
 import vSelect from 'vue-select';
 import throttle from 'lodash/throttle';
 import CloseIcon from '@/assets/icons/close.svg';
-import 'vue-datetime/dist/vue-datetime.css';
+import Datepicker from '@vuepic/vue-datepicker';
+import '@vuepic/vue-datepicker/dist/main.css'
 
 const { CancelToken } = axios;
 let currentCancelToken = null;
@@ -16,7 +17,7 @@ export default {
 
   components: {
     GlobalEvents,
-    Datetime,
+    Datepicker,
     CloseIcon,
     vSelect,
   },
@@ -44,10 +45,15 @@ export default {
       if (this.eventId) return 'edit';
       return 'add';
     },
+
+    isSaveButtonDisabled() {
+      return this.eventName.trim() === '' || this.eventDate === '' || !this.selectedCountry || !this.selectedCity;
+    }
   },
 
   watch: {
     'selectedCountry.id': function (newId, oldId) {
+      if (oldId === null && this.selectedCity) return;
       if (newId !== oldId && oldId !== undefined) this.selectedCity = null;
       this.cities = [];
     },

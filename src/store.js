@@ -1,10 +1,8 @@
-import Vue from 'vue';
-import Vuex from 'vuex';
+import { createStore } from 'vuex'
 import { set } from '@/utils/storage';
 
-Vue.use(Vuex);
 
-export default new Vuex.Store({
+export default createStore({
   state: {
     events: [],
     notes: [],
@@ -18,6 +16,10 @@ export default new Vuex.Store({
 
     ADD_EVENT(state, event) {
       state.events.push(event);
+    },
+
+    SET_EVENTS(state, events) {
+      state.events = events;
     },
 
     REMOVE_EVENT(state, eventId) {
@@ -67,6 +69,10 @@ export default new Vuex.Store({
 
     addEvent({ commit }, event) {
       commit('ADD_EVENT', event);
+    },
+
+    setEvents({ commit }, events) {
+      commit('SET_EVENTS', events);
     },
 
     removeEvent({ commit }, eventId) {
