@@ -1,11 +1,22 @@
-import EventList from "../sections/EventList/EventList.vue";
-import ModifyEvent from "../modals/ModifyEvent/ModifyEvent.vue";
-import BlankSlate from "../sections/EventListBlankSlate/EventListBlankSlate.vue";
-import { get } from "../../utils/storage";
-import AddPopover from "../widgets/AddPopover/AddPopover.vue";
-import AddStickyNote from "../modals/AddStickyNote/AddStickyNote.vue";
-import { STORE_EVENTS_TO_SYNC } from "../../constants";
-import StickyNotes from "../sections/StickyNotes/StickyNotes.vue";
+<template>
+  <div class="flex flex-col h-screen p-0 m-0 overflow-hidden">
+    <event-list v-if="hasEvents" />
+    <blank-slate v-else />
+    <StickyNotes />
+    <AddPopover />
+    <modify-event />
+    <add-sticky-note />
+  </div>
+</template>
+<script>
+import EventList from "./sections/EventList.vue";
+import ModifyEvent from "./modals/ModifyEvent.vue";
+import BlankSlate from "./sections/EventListBlankSlate.vue";
+import { get } from "../utils/storage";
+import AddPopover from "./widgets/AddPopover.vue";
+import AddStickyNote from "./modals/AddStickyNote.vue";
+import { STORE_EVENTS_TO_SYNC } from "../constants";
+import StickyNotes from "./sections/StickyNotes.vue";
 
 // @vue/component
 export default {
@@ -55,3 +66,4 @@ export default {
     },
   },
 };
+</script>

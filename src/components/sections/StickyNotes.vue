@@ -1,5 +1,5 @@
 <template>
-  <div class="s-sticky-notes">
+  <div class="absolute top-0 left-0 w-screen flex p-6 overflow-x-scroll">
     <StickyNote
       v-for="note in notes"
       :key="note.id"
@@ -36,15 +36,3 @@ export default {
   },
 };
 </script>
-<style lang="scss">
-.s-sticky-notes {
-  position: absolute;
-  width: 100vw;
-  display: flex;
-  top: 0;
-  left: 0;
-  padding: 24px;
-  display: flex;
-  overflow-x: scroll;
-}
-</style>

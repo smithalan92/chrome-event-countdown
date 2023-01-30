@@ -1,7 +1,9 @@
 import { createApp } from "vue";
 import vClickOutside from "v-click-outside";
-import App from "./components/App/App.vue";
+import App from "./components/App.vue";
 import store from "./store";
+
+import "./index.css";
 
 const app = createApp(App);
 

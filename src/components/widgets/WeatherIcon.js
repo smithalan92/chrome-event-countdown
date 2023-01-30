@@ -1,11 +1,11 @@
-import Cloudy from "../../../assets/icons/weather/cloudy.svg";
-import Fog from "../../../assets/icons/weather/fog.svg";
-import PartlyCloudy from "../../../assets/icons/weather/partly_cloudy.svg";
-import Rain from "../../../assets/icons/weather/rain.svg";
-import Snow from "../../../assets/icons/weather/snow.svg";
-import ClearDay from "../../../assets/icons/weather/clear_day.svg";
-import ClearNight from "../../../assets/icons/weather/clear_night.svg";
-import Thunder from "../../../assets/icons/weather/thunder.svg";
+import Cloudy from "../../assets/icons/weather/cloudy.svg";
+import Fog from "../../assets/icons/weather/fog.svg";
+import PartlyCloudy from "../../assets/icons/weather/partly_cloudy.svg";
+import Rain from "../../assets/icons/weather/rain.svg";
+import Snow from "../../assets/icons/weather/snow.svg";
+import ClearDay from "../../assets/icons/weather/clear_day.svg";
+import ClearNight from "../../assets/icons/weather/clear_night.svg";
+import Thunder from "../../assets/icons/weather/thunder.svg";
 import { h } from "vue";
 
 // @vue/component
