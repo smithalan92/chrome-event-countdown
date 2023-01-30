@@ -1,19 +1,13 @@
 <template>
   <div class="absolute top-0 left-0 w-screen flex p-6 overflow-x-scroll">
-    <StickyNote
-      v-for="note in notes"
-      :key="note.id"
-      :note="note"
-      @delete="deleteNote"
-      @update="updateNote"
-    />
+    <StickyNote v-for="note in notes" :key="note.id" :note="note" @delete="deleteNote" @update="updateNote" />
   </div>
 </template>
 <script>
-import StickyNote from "./StickyNote.vue";
+import StickyNote from './StickyNote.vue';
 
 export default {
-  name: "StickyNotes",
+  name: 'StickyNotes',
 
   components: {
     StickyNote,
@@ -27,11 +21,11 @@ export default {
 
   methods: {
     deleteNote(noteId) {
-      this.$store.dispatch("removeNote", noteId);
+      this.$store.dispatch('removeNote', noteId);
     },
 
     updateNote({ noteId, text }) {
-      this.$store.dispatch("updateNote", { noteId, text });
+      this.$store.dispatch('updateNote', { noteId, text });
     },
   },
 };

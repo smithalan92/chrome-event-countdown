@@ -1,5 +1,5 @@
-import { createStore } from "vuex";
-import { set } from "./utils/storage";
+import { createStore } from 'vuex';
+import { set } from './utils/storage';
 
 export default createStore({
   state: {
@@ -22,16 +22,12 @@ export default createStore({
     },
 
     REMOVE_EVENT(state, eventId) {
-      const index = state.events.findIndex(
-        (event) => event.eventId === eventId
-      );
+      const index = state.events.findIndex((event) => event.eventId === eventId);
       state.events.splice(index, 1);
     },
 
     UPDATE_EVENT(state, event) {
-      const eventIndex = state.events.findIndex(
-        (e) => e.eventId === event.eventId
-      );
+      const eventIndex = state.events.findIndex((e) => e.eventId === event.eventId);
 
       if (eventIndex > -1) {
         state.events.splice(eventIndex, 1, event);
@@ -63,39 +59,39 @@ export default createStore({
         notes: state.notes,
       };
 
-      set("data", data);
+      set('data', data);
     },
 
     restoreState({ commit }, data) {
-      commit("RESTORE_STATE", data);
+      commit('RESTORE_STATE', data);
     },
 
     addEvent({ commit }, event) {
-      commit("ADD_EVENT", event);
+      commit('ADD_EVENT', event);
     },
 
     setEvents({ commit }, events) {
-      commit("SET_EVENTS", events);
+      commit('SET_EVENTS', events);
     },
 
     removeEvent({ commit }, eventId) {
-      commit("REMOVE_EVENT", eventId);
+      commit('REMOVE_EVENT', eventId);
     },
 
     updateEvent({ commit }, event) {
-      commit("UPDATE_EVENT", event);
+      commit('UPDATE_EVENT', event);
     },
 
     addNote({ commit }, note) {
-      commit("ADD_NOTE", note);
+      commit('ADD_NOTE', note);
     },
 
     updateNote({ commit }, { noteId, text }) {
-      commit("UPDATE_NOTE", { noteId, text });
+      commit('UPDATE_NOTE', { noteId, text });
     },
 
     removeNote({ commit }, id) {
-      commit("REMOVE_NOTE", id);
+      commit('REMOVE_NOTE', id);
     },
 
     openAddEventModal() {},

@@ -1,15 +1,7 @@
 <template>
-  <div
-    v-if="isOverlayVisible"
-    class="absolute top-0 left-0 w-screen h-screen bg-white/20 flex justify-center items-center"
-  >
+  <div v-if="isOverlayVisible" class="absolute top-0 left-0 w-screen h-screen bg-white/20 flex justify-center items-center">
     <transition name="slideDown">
-      <div
-        v-if="isVisible"
-        v-click-outside="close"
-        class="flex flex-col w-96 bg-white p-6 rounded"
-        style="animation-duration: 0.5s"
-      >
+      <div v-if="isVisible" v-click-outside="close" class="flex flex-col w-96 bg-white p-6 rounded" style="animation-duration: 0.5s">
         <div class="flex justify-between items-center pb-3">
           <div class="font-bold text-l">Add Sticky Note</div>
           <div class="p-1 cursor-pointer hover:opacity-80" @click="close">
@@ -21,21 +13,18 @@
             ref="textarea"
             v-model="text"
             class="outline-none p-3 border border-solid border-gray-200 text-base rounded"
-            rows="10"
-          ></textarea>
+            rows="10"></textarea>
         </div>
         <div class="flex justify-end pt-5">
           <button
             class="outline-none bg-white text-sm py-2 px-4 text-red-600 mr-3 hover:underline rounded cursor-pointer"
-            @click="onClickCancel"
-          >
+            @click="onClickCancel">
             Cancel
           </button>
           <button
             class="outline-none bg-green-600 text-sm py-2 px-4 text-white mr-3 hover:bg-green-700 rounded cursor-pointer disabled:bg-gray-500 disabled:cursor-not-allowed"
             :disabled="!hasText"
-            @click="onClickAdd"
-          >
+            @click="onClickAdd">
             Add
           </button>
         </div>
@@ -46,11 +35,11 @@
 </template>
 <script>
 /* eslint-disable func-names */
-import { GlobalEvents } from "vue-global-events";
-import CloseIcon from "../../assets/icons/close.svg";
+import { GlobalEvents } from 'vue-global-events';
+import CloseIcon from '../../assets/icons/close.svg';
 
 export default {
-  name: "AddStickyNote",
+  name: 'AddStickyNote',
 
   components: {
     GlobalEvents,
@@ -60,7 +49,7 @@ export default {
   data() {
     return {
       isVisible: false,
-      text: "",
+      text: '',
       isOverlayVisible: false,
     };
   },
@@ -74,7 +63,7 @@ export default {
   mounted() {
     this.$store.subscribeAction((action) => {
       const { type } = action;
-      if (type === "openAddStickyNoteModal") {
+      if (type === 'openAddStickyNoteModal') {
         this.open();
       }
     });
@@ -93,11 +82,11 @@ export default {
       this.isVisible = false;
       await this.$nextTick();
       this.isOverlayVisible = false;
-      this.text = "";
+      this.text = '';
     },
 
     onClickAdd() {
-      this.$store.dispatch("addNote", {
+      this.$store.dispatch('addNote', {
         id: Math.floor(Math.random() * Date.now()),
         text: this.text,
       });

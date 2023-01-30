@@ -1,41 +1,20 @@
 <template>
-  <div
-    class="flex items-center justify-center text-white h-full flex-1 cursor-move relative"
-  >
+  <div class="flex items-center justify-center text-white h-full flex-1 cursor-move relative">
     <div
       class="absolute top-0 left-0 w-full h-full bg-cover bg-center bg-no-repeat bg-fixed z-[-1] opacity-70"
-      :style="{ 'background-image': 'url(' + background + ')' }"
-    />
-    <div
-      class="relative flex flex-col bg-black/40 items-center justify-center p-4 flex-1 min-h-[210px]"
-    >
-      <div
-        v-if="isReady"
-        class="flex items-center absolute top-[10px] right-[10px]"
-      >
-        <div
-          class="py-1 px-2 cursor-pointer hover:opacity-70"
-          @click="onClickEdit"
-        >
+      :style="{ 'background-image': 'url(' + background + ')' }" />
+    <div class="relative flex flex-col bg-black/40 items-center justify-center p-4 flex-1 min-h-[210px]">
+      <div v-if="isReady" class="flex items-center absolute top-[10px] right-[10px]">
+        <div class="py-1 px-2 cursor-pointer hover:opacity-70" @click="onClickEdit">
           <edit-icon class="fill-white w-4 h-4" />
         </div>
-        <div
-          class="py-1 px-2 cursor-pointer hover:opacity-70"
-          @click="onClickRemove"
-        >
+        <div class="py-1 px-2 cursor-pointer hover:opacity-70" @click="onClickRemove">
           <trash-icon class="fill-white w-4 h-4" />
         </div>
       </div>
-      <span v-if="isReady" class="text-[40px] font-bold mb-1">{{
-        eventName
-      }}</span>
+      <span v-if="isReady" class="text-[40px] font-bold mb-1">{{ eventName }}</span>
       <city-data :event-city="eventCity" :event-country="eventCountry" />
-      <countdown
-        v-if="!hasEventPassed"
-        :time="countdownDate"
-        :emit-events="true"
-        @progress="calculateCountdownProgress"
-      >
+      <countdown v-if="!hasEventPassed" :time="countdownDate" :emit-events="true" @progress="calculateCountdownProgress">
         <div class="flex flex-col items-center justify-center">
           <div class="text-2xl mr-1 text-center">{{ weekString }}</div>
           <div class="flex flex-col">
@@ -54,16 +33,16 @@
   </div>
 </template>
 <script>
-import Countdown from "@chenfengyuan/vue-countdown";
-import format from "date-fns/format";
-import CityData from "./CityData.vue";
-import TrashIcon from "../../assets/icons/trash.svg";
-import EditIcon from "../../assets/icons/edit.svg";
-import CheckIcon from "../../assets/icons/check.svg";
+import Countdown from '@chenfengyuan/vue-countdown';
+import format from 'date-fns/format';
+import CityData from './CityData.vue';
+import TrashIcon from '../../assets/icons/trash.svg';
+import EditIcon from '../../assets/icons/edit.svg';
+import CheckIcon from '../../assets/icons/check.svg';
 
 // @vue/component
 export default {
-  name: "Event",
+  name: 'Event',
 
   components: {
     Countdown,
@@ -92,7 +71,7 @@ export default {
     background: {
       type: String,
       required: false,
-      default: "",
+      default: '',
     },
 
     eventCountry: {
@@ -110,13 +89,13 @@ export default {
 
   data() {
     return {
-      weekString: "",
-      dayString: "",
-      hourString: "",
-      minuteString: "",
-      secondString: "",
+      weekString: '',
+      dayString: '',
+      hourString: '',
+      minuteString: '',
+      secondString: '',
       isReady: false,
-      formatedEventDate: format(this.eventDate, "dd MMMM yyyy, h:mma"),
+      formatedEventDate: format(this.eventDate, 'dd MMMM yyyy, h:mma'),
     };
   },
 
@@ -145,29 +124,29 @@ export default {
       const weekCount = Math.floor(days / 7);
       const dayCount = days % 7;
 
-      this.weekString = this.getTimeString(weekCount, "week");
+      this.weekString = this.getTimeString(weekCount, 'week');
 
-      this.dayString = this.getTimeString(dayCount, "day");
+      this.dayString = this.getTimeString(dayCount, 'day');
 
-      this.hourString = this.getTimeString(hours, "hour");
+      this.hourString = this.getTimeString(hours, 'hour');
 
-      this.minuteString = this.getTimeString(minutes, "minute");
+      this.minuteString = this.getTimeString(minutes, 'minute');
 
-      this.secondString = this.getTimeString(seconds, "second");
+      this.secondString = this.getTimeString(seconds, 'second');
 
       if (!this.isReady) this.isReady = true;
     },
 
     getTimeString(value, type) {
-      return `${value} ${type}${value !== 1 ? "s" : ""}`;
+      return `${value} ${type}${value !== 1 ? 's' : ''}`;
     },
 
     onClickRemove() {
-      this.$store.dispatch("removeEvent", this.eventId);
+      this.$store.dispatch('removeEvent', this.eventId);
     },
 
     onClickEdit() {
-      this.$store.dispatch("openAddEventModal", {
+      this.$store.dispatch('openAddEventModal', {
         eventId: this.eventId,
         eventName: this.eventName,
         eventDate: this.eventDate.toISOString(),

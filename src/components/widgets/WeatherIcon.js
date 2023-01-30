@@ -1,16 +1,16 @@
-import Cloudy from "../../assets/icons/weather/cloudy.svg";
-import Fog from "../../assets/icons/weather/fog.svg";
-import PartlyCloudy from "../../assets/icons/weather/partly_cloudy.svg";
-import Rain from "../../assets/icons/weather/rain.svg";
-import Snow from "../../assets/icons/weather/snow.svg";
-import ClearDay from "../../assets/icons/weather/clear_day.svg";
-import ClearNight from "../../assets/icons/weather/clear_night.svg";
-import Thunder from "../../assets/icons/weather/thunder.svg";
-import { h } from "vue";
+import Cloudy from '../../assets/icons/weather/cloudy.svg';
+import Fog from '../../assets/icons/weather/fog.svg';
+import PartlyCloudy from '../../assets/icons/weather/partly_cloudy.svg';
+import Rain from '../../assets/icons/weather/rain.svg';
+import Snow from '../../assets/icons/weather/snow.svg';
+import ClearDay from '../../assets/icons/weather/clear_day.svg';
+import ClearNight from '../../assets/icons/weather/clear_night.svg';
+import Thunder from '../../assets/icons/weather/thunder.svg';
+import { h } from 'vue';
 
 // @vue/component
 export default {
-  name: "WeatherIcon",
+  name: 'WeatherIcon',
 
   props: {
     icon: {
@@ -25,19 +25,19 @@ export default {
 
   render() {
     switch (this.icon) {
-      case "clear":
+      case 'clear':
         return this.isDay ? h(ClearDay) : h(ClearNight);
-      case "partly_cloudy":
+      case 'partly_cloudy':
         return this.isDay ? h(PartlyCloudy) : h(Cloudy);
-      case "cloudy":
+      case 'cloudy':
         return h(Cloudy);
-      case "rain":
+      case 'rain':
         return h(Rain);
-      case "snow":
+      case 'snow':
         return h(Snow);
-      case "thunder":
+      case 'thunder':
         return h(Thunder);
-      case "fog":
+      case 'fog':
         return h(Fog);
       default:
         return h(Cloudy);
