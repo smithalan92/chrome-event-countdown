@@ -1,293 +1,255 @@
 <template>
-  <div v-if="isOverlayVisible" class="absolute top-0 left-0 w-screen h-screen bg-white/20 flex justify-center items-center">
-    <transition name="slideDown">
-      <div v-if="isVisible" v-click-outside="close" class="flex flex-col w-96 bg-white p-6 rounded" style="animation-duration: 0.5s">
-        <div class="flex justify-between items-center pb-3">
-          <div class="font-bold text-l">
-            {{ mode === 'edit' ? `Edit ${eventName}` : 'Add New Event' }}
-          </div>
-          <div class="p-1 cursor-pointer hover:opacity-80" @click="close">
-            <close-icon class="fill-gray-600 w-5 h-5" />
-          </div>
-        </div>
-        <div class="flex flex-col py-2 flex-1">
-          <div class="flex items-center mb-2">
-            <span class="min-w-[120px] select-none">Event Country</span>
-            <v-select
-              v-model="selectedCountry"
-              :options="countries"
-              placeholder="Type to search countries"
-              label="name"
-              class="flex-1"></v-select>
-          </div>
-          <div v-if="selectedCountry" class="flex items-center mb-2">
-            <span class="min-w-[120px] select-none">Event City</span>
-            <v-select
-              v-model="selectedCity"
-              :options="cities"
-              placeholder="Type to search cities"
-              label="name"
-              class="flex-1"
-              @search="loadCities"></v-select>
-          </div>
-          <div class="flex items-center mb-2">
-            <span class="min-w-[120px] select-none">Event Name</span>
-            <input
-              ref="name"
-              v-model="eventName"
-              class="flex-1 p-1 rounded border border-solid border-gray-200 outline-none h-9"
-              type="text" />
-          </div>
-          <div class="flex items-center mb-2">
-            <span class="min-w-[120px] select-none">Event Date</span>
-            <Datepicker v-model="eventDate" />
-          </div>
-          <div class="flex items-center mb-2">
-            <span class="min-w-[120px] select-none">Image</span>
-            <div class="flex flex-col flex-1">
-              <input v-model="eventBackgroundImage" class="p-1 rounded border border-solid border-gray-200 outline-none h-9" type="url" />
-              <span class="mt-1 text-[8px]"> Paste a URL to an image here. If empty, a random image will be used. </span>
-            </div>
-          </div>
-          <transition name="zoom">
-            <div v-if="eventBackgroundImage" class="flex flex-1 justify-center items-center p-5">
-              <img class="max-h-[120px]" :src="eventBackgroundImage" />
-            </div>
-          </transition>
-        </div>
-        <div class="flex justify-end pt-5">
-          <button
-            class="outline-none bg-white text-sm py-2 px-4 text-red-600 mr-3 hover:underline rounded cursor-pointer"
-            @click="onClickCancel">
-            Cancel
-          </button>
-          <button
-            class="outline-none bg-green-600 text-sm py-2 px-4 text-white mr-3 hover:bg-green-700 rounded cursor-pointer disabled:bg-gray-500 disabled:cursor-not-allowed"
-            :disabled="isSaveButtonDisabled"
-            @click="onClickConfirm">
-            {{ mode === 'edit' ? `Update` : 'Add' }}
-          </button>
+  <ModalBase ref="modal" :title="modalTitle" @open="onModalOpen" @close="onModalClose">
+    <template #body>
+      <div class="flex items-center mb-2">
+        <span class="min-w-[120px] select-none">Event Country</span>
+        <v-select
+          v-model="selectedCountry"
+          :options="countries"
+          placeholder="Type to search countries"
+          label="name"
+          class="flex-1"></v-select>
+      </div>
+      <div v-if="selectedCountry" class="flex items-center mb-2">
+        <span class="min-w-[120px] select-none">Event City</span>
+        <v-select
+          v-model="selectedCity"
+          :options="cities"
+          placeholder="Type to search cities"
+          label="name"
+          class="flex-1"
+          @search="loadCities"></v-select>
+      </div>
+      <div class="flex items-center mb-2">
+        <span class="min-w-[120px] select-none">Event Name</span>
+        <input
+          ref="nameRef"
+          v-model="eventName"
+          class="flex-1 p-1 rounded border border-solid border-gray-200 outline-none h-9"
+          type="text" />
+      </div>
+      <div class="flex items-center mb-2">
+        <span class="min-w-[120px] select-none">Event Date</span>
+        <Datepicker v-model="eventDate" />
+      </div>
+      <div class="flex items-center mb-2">
+        <span class="min-w-[120px] select-none">Image</span>
+        <div class="flex flex-col flex-1">
+          <input v-model="eventBackgroundImage" class="p-1 rounded border border-solid border-gray-200 outline-none h-9" type="url" />
+          <span class="mt-1 text-[8px]"> Paste a URL to an image here. If empty, a random image will be used. </span>
         </div>
       </div>
-    </transition>
-    <global-events @keydown.esc="close" />
-  </div>
+      <transition name="zoom">
+        <div v-if="eventBackgroundImage" class="flex flex-1 justify-center items-center p-5">
+          <img class="max-h-[120px]" :src="eventBackgroundImage" />
+        </div>
+      </transition>
+    </template>
+    <template #footer>
+      <button
+        class="outline-none bg-white text-sm py-2 px-4 text-red-600 mr-3 hover:underline rounded cursor-pointer"
+        @click="onClickCancel">
+        Cancel
+      </button>
+      <button
+        class="outline-none bg-green-600 text-sm py-2 px-4 text-white mr-3 hover:bg-green-700 rounded cursor-pointer disabled:bg-gray-500 disabled:cursor-not-allowed"
+        :disabled="isSaveButtonDisabled"
+        @click="onClickConfirm">
+        {{ mode === 'edit' ? `Update` : 'Add' }}
+      </button>
+    </template>
+  </ModalBase>
 </template>
-<script>
+<script setup>
 /* eslint-disable func-names */
 
 import axios, { CancelToken, isCancel } from 'axios';
-import { GlobalEvents } from 'vue-global-events';
 import vSelect from 'vue-select';
 import throttle from 'lodash/throttle';
-import CloseIcon from '../../assets/icons/close.svg';
 import Datepicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css';
 import 'vue-select/dist/vue-select.css';
+import ModalBase from './ModalBase.vue';
+import { ref, onMounted, watch, computed } from 'vue';
+import { useStore } from 'vuex';
 
 let currentCancelToken = null;
+const store = useStore();
+const modal = ref(null);
+const nameRef = ref(null);
 
-// @vue/component
-export default {
-  name: 'ModifyEvent',
+const eventId = ref(null);
+const eventName = ref('');
+const eventDate = ref('');
+const eventBackgroundImage = ref('');
+const countries = ref([]);
+const cities = ref([]);
+const selectedCountry = ref(null);
+const selectedCity = ref(null);
 
-  components: {
-    GlobalEvents,
-    Datepicker,
-    CloseIcon,
-    vSelect,
+const mode = computed(() => {
+  if (eventId.value) return 'edit';
+  return 'add';
+});
+
+const modalTitle = computed(() => {
+  if (mode.value === 'edit') return 'Edit Event';
+  return 'Add Event';
+});
+
+const isSaveButtonDisabled = computed(() => {
+  return eventName.value.trim() === '' || eventDate.value === '' || !selectedCountry.value || !selectedCity.value;
+});
+
+watch(
+  () => selectedCountry.value?.id,
+  (newId, oldId) => {
+    if (oldId === null && selectedCity.value) return;
+    if (newId !== oldId && oldId !== undefined) selectedCity.value = null;
+    cities.value = [];
   },
+);
 
-  data() {
-    return {
-      eventId: null,
-      isVisible: false,
-      eventName: '',
-      eventDate: '',
-      eventBackgroundImage: '',
-      isOverlayVisible: false,
-      countries: [],
-      cities: [],
-      selectedCountry: null,
-      selectedCity: null,
-      citySearchTerm: '',
-      isSearching: false,
-      cityOffset: 0,
-    };
-  },
-
-  computed: {
-    mode() {
-      if (this.eventId) return 'edit';
-      return 'add';
-    },
-
-    isSaveButtonDisabled() {
-      return this.eventName.trim() === '' || this.eventDate === '' || !this.selectedCountry || !this.selectedCity;
-    },
-  },
-
-  watch: {
-    'selectedCountry.id': function (newId, oldId) {
-      if (oldId === null && this.selectedCity) return;
-      if (newId !== oldId && oldId !== undefined) this.selectedCity = null;
-      this.cities = [];
-    },
-  },
-
-  mounted() {
-    this.loadCountries();
-    this.$store.subscribeAction((action) => {
-      const { payload, type } = action;
-      if (type === 'openAddEventModal') {
-        if (payload) {
-          this.eventId = payload.eventId;
-          this.eventName = payload.eventName;
-          this.eventDate = payload.eventDate;
-          this.selectedCountry = payload.eventCountry;
-          this.selectedCity = payload.eventCity;
-          this.eventBackgroundImage = payload.eventBackgroundImage;
-        }
-
-        this.open();
-      }
-    });
-  },
-
-  methods: {
-    async open() {
-      this.isOverlayVisible = true;
-      await this.$nextTick();
-      this.isVisible = true;
-      if (this.$refs.name) this.$refs.name.focus();
-    },
-
-    async close() {
-      this.isVisible = false;
-      await this.$nextTick();
-      this.isOverlayVisible = false;
-      this.eventId = null;
-      this.eventName = '';
-      this.eventDate = '';
-      this.eventBackgroundImage = '';
-      this.selectedCountry = null;
-      this.selectedCity = null;
-    },
-
-    onClickConfirm() {
-      if (this.mode === 'add') {
-        this.onClickAdd();
-      } else {
-        this.onClickEdit();
-      }
-    },
-
-    onClickAdd() {
-      if (!this.validateInput()) {
-        console.log('invalid input');
-        return;
+onMounted(() => {
+  loadCountries();
+  store.subscribeAction((action) => {
+    const { payload, type } = action;
+    if (type === 'openAddEventModal') {
+      if (payload) {
+        eventId.value = payload.eventId;
+        eventName.value = payload.eventName;
+        eventDate.value = payload.eventDate;
+        selectedCountry.value = payload.eventCountry;
+        selectedCity.value = payload.eventCity;
+        eventBackgroundImage.value = payload.eventBackgroundImage;
       }
 
-      const date = new Date(this.eventDate);
-      const newEventId = this.generateEventId();
+      modal.value.open();
+    }
+  });
+});
 
-      this.$store.dispatch('addEvent', {
-        eventId: newEventId,
-        eventName: this.eventName,
-        eventDate: date,
-        background: this.eventBackgroundImage,
-        eventCountry: this.selectedCountry,
-        eventCity: this.selectedCity,
+const onModalOpen = () => {
+  if (nameRef.value) nameRef.value.focus();
+};
+
+const onModalClose = () => {
+  eventId.value = null;
+  eventName.value = '';
+  eventDate.value = '';
+  eventBackgroundImage.value = '';
+  selectedCountry.value = null;
+  selectedCity.value = null;
+};
+
+const onClickConfirm = () => {
+  if (mode.value === 'add') {
+    onClickAdd();
+  } else {
+    onClickEdit();
+  }
+};
+
+const validateInput = () => {
+  if (eventName.value === '') return false;
+  if (eventDate.value === '') return false;
+  if (selectedCountry.value && !selectedCity.value) return false;
+
+  if (
+    eventBackgroundImage.value.endsWith('.png') ||
+    eventBackgroundImage.value.endsWith('.jpg') ||
+    eventBackgroundImage.value.endsWith('.jpeg') ||
+    eventBackgroundImage.value.endsWith('.gif')
+  )
+    return true;
+
+  if (eventBackgroundImage.value === '') {
+    eventBackgroundImage.value = 'https://picsum.photos/1200/800';
+  }
+
+  return true;
+};
+
+const onClickAdd = () => {
+  if (!validateInput()) {
+    console.log('invalid input');
+    return;
+  }
+
+  const date = new Date(eventDate.value);
+  const newEventId = Math.floor(Math.random() * Date.now());
+
+  store.dispatch('addEvent', {
+    eventId: newEventId,
+    eventName: eventName.value,
+    eventDate: date,
+    background: eventBackgroundImage.value,
+    eventCountry: selectedCountry.value,
+    eventCity: selectedCity.value,
+  });
+
+  modal.value.close();
+};
+
+const onClickEdit = () => {
+  if (!validateInput()) {
+    console.log('invalid input');
+    return;
+  }
+
+  const date = new Date(eventDate.value);
+
+  store.dispatch('updateEvent', {
+    eventId: eventId.value,
+    eventName: eventName.value,
+    eventDate: date,
+    background: eventBackgroundImage.value,
+    eventCountry: selectedCountry.value,
+    eventCity: selectedCity.value,
+  });
+
+  modal.value.close();
+};
+
+const onClickCancel = () => {
+  modal.value.close();
+};
+
+const loadCountries = async () => {
+  const { data } = await axios.get('https://eventcountdownapi.mralansmith.com/api/countries');
+  countries.value = data.countries;
+};
+
+const throttledLoadCities = throttle(
+  async (loading, search) => {
+    try {
+      if (currentCancelToken) currentCancelToken.cancel('Cancelling old request');
+      currentCancelToken = CancelToken.source();
+      if (!search) return;
+      loading(true);
+      const params = { limit: 15 };
+      if (search) params.searchTerm = search;
+
+      const { data } = await axios.get(`https://eventcountdownapi.mralansmith.com/api/countries/${selectedCountry.value.id}/cities`, {
+        cancelToken: currentCancelToken.token,
+        params,
       });
-
-      this.close();
-    },
-
-    onClickEdit() {
-      if (!this.validateInput()) {
-        console.log('invalid input');
-        return;
+      cities.value = data.cities;
+      loading(false);
+    } catch (error) {
+      if (!isCancel(error)) {
+        loading(false);
+        console.error(error);
       }
-
-      const date = new Date(this.eventDate);
-
-      this.$store.dispatch('updateEvent', {
-        eventId: this.eventId,
-        eventName: this.eventName,
-        eventDate: date,
-        background: this.eventBackgroundImage,
-        eventCountry: this.selectedCountry,
-        eventCity: this.selectedCity,
-      });
-
-      this.close();
-    },
-
-    generateEventId() {
-      return Math.floor(Math.random() * Date.now());
-    },
-
-    validateInput() {
-      if (this.eventName === '') return false;
-      if (this.eventDate === '') return false;
-      if (this.selectedCountry && !this.selectedCity) return false;
-
-      if (
-        this.eventBackgroundImage.endsWith('.png') ||
-        this.eventBackgroundImage.endsWith('.jpg') ||
-        this.eventBackgroundImage.endsWith('.jpeg') ||
-        this.eventBackgroundImage.endsWith('.gif')
-      )
-        return true;
-
-      if (this.eventBackgroundImage === '') {
-        this.eventBackgroundImage = 'https://picsum.photos/1200/800';
-      }
-
-      return true;
-    },
-
-    onClickCancel() {
-      this.close();
-    },
-
-    async loadCountries() {
-      const { data } = await axios.get('https://eventcountdownapi.mralansmith.com/api/countries');
-      this.countries = data.countries;
-    },
-
-    throttledLoadCities: throttle(
-      async (loading, search, self) => {
-        try {
-          if (currentCancelToken) currentCancelToken.cancel('Cancelling old request');
-          currentCancelToken = CancelToken.source();
-          if (!search) return;
-          loading(true);
-          const params = { limit: 15 };
-          if (search) params.searchTerm = search;
-
-          const { data } = await axios.get(`https://eventcountdownapi.mralansmith.com/api/countries/${self.selectedCountry.id}/cities`, {
-            cancelToken: currentCancelToken.token,
-            params,
-          });
-          self.cities = data.cities;
-          loading(false);
-        } catch (error) {
-          if (!isCancel(error)) {
-            loading(false);
-            console.error(error);
-          }
-        }
-      },
-      200,
-      { leading: false, trailing: true },
-    ),
-
-    loadCities(search, loading) {
-      if (!this.selectedCountry) return;
-
-      this.throttledLoadCities(loading, search, this);
-    },
+    }
   },
+  200,
+  { leading: false, trailing: true },
+);
+
+const loadCities = (search, loading) => {
+  if (!selectedCountry.value) return;
+
+  throttledLoadCities(loading, search);
 };
 </script>
