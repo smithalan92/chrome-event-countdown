@@ -62,8 +62,6 @@
 </template>
 <script setup>
 /* eslint-disable func-names */
-
-import axios, { CancelToken, isCancel } from 'axios';
 import vSelect from 'vue-select';
 import throttle from 'lodash/throttle';
 import Datepicker from '@vuepic/vue-datepicker';
@@ -72,8 +70,9 @@ import 'vue-select/dist/vue-select.css';
 import ModalBase from './ModalBase.vue';
 import { ref, onMounted, watch, computed } from 'vue';
 import { useStore } from 'vuex';
+import { getCountries, getCitiesForCountry } from '../../api';
 
-let currentCancelToken = null;
+let abortController = null;
 const store = useStore();
 const modal = ref(null);
 const nameRef = ref(null);
@@ -216,31 +215,33 @@ const onClickCancel = () => {
 };
 
 const loadCountries = async () => {
-  const { data } = await axios.get('https://eventcountdownapi.mralansmith.com/api/countries');
+  const data = await getCountries();
   countries.value = data.countries;
 };
 
 const throttledLoadCities = throttle(
   async (loading, search) => {
     try {
-      if (currentCancelToken) currentCancelToken.cancel('Cancelling old request');
-      currentCancelToken = CancelToken.source();
-      if (!search) return;
+      abortController?.abort();
+      abortController = new AbortController();
+      if (!search) {
+        cities.value = [];
+        return;
+      }
       loading(true);
-      const params = { limit: 15 };
-      if (search) params.searchTerm = search;
 
-      const { data } = await axios.get(`https://eventcountdownapi.mralansmith.com/api/countries/${selectedCountry.value.id}/cities`, {
-        cancelToken: currentCancelToken.token,
-        params,
+      const data = await getCitiesForCountry({
+        countryId: selectedCountry.value.id,
+        searchTerm: search,
+        signal: abortController.signal,
       });
+
       cities.value = data.cities;
       loading(false);
     } catch (error) {
-      if (!isCancel(error)) {
-        loading(false);
-        console.error(error);
-      }
+      if (error?.name === 'CanceledError') return;
+      loading(false);
+      console.error(error);
     }
   },
   200,

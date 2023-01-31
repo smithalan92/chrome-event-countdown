@@ -15,8 +15,8 @@
 <script>
 /* eslint-disable vue/require-default-prop */
 /* eslint-disable vue/require-prop-types */
-import axios from 'axios';
 import moment from 'moment-timezone';
+import { getWeatherForCity } from '../../api';
 import WeatherIcon from '../widgets/WeatherIcon';
 
 // @vue/component
@@ -67,7 +67,7 @@ export default {
 
   methods: {
     async getCurrentWeather() {
-      const { data } = await axios.get(`http://eventcountdownapi.mralansmith.com/api/weather/${this.eventCity.id}`);
+      const data = await getWeatherForCity(this.eventCity.id);
       this.weather = data;
     },
 
