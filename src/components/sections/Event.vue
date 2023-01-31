@@ -1,33 +1,35 @@
 <template>
-  <div class="flex items-center justify-center text-white h-full flex-1 cursor-move relative">
+  <div class="flex items-center justify-center text-white h-full flex-1 cursor-move relative overflow-hidden min-w-[180px]">
     <div
       class="absolute top-0 left-0 w-full h-full bg-cover bg-center bg-no-repeat bg-fixed z-[-1] opacity-70"
       :style="{ 'background-image': 'url(' + background + ')' }" />
-    <div class="relative flex flex-col bg-black/40 items-center justify-center p-4 flex-1 min-h-[210px]">
-      <div v-if="isReady" class="flex items-center absolute top-[10px] right-[10px]">
-        <div class="py-1 px-2 cursor-pointer hover:opacity-70" @click="onClickEdit">
-          <edit-icon class="fill-white w-4 h-4" />
-        </div>
-        <div class="py-1 px-2 cursor-pointer hover:opacity-70" @click="onClickRemove">
-          <trash-icon class="fill-white w-4 h-4" />
-        </div>
-      </div>
-      <span v-if="isReady" class="text-[40px] font-bold mb-1">{{ eventName }}</span>
-      <city-data :event-city="eventCity" :event-country="eventCountry" />
-      <countdown v-if="!hasEventPassed" :time="countdownDate" :emit-events="true" @progress="calculateCountdownProgress">
-        <div class="flex flex-col items-center justify-center">
-          <div class="text-2xl mr-1 text-center">{{ weekString }}</div>
-          <div class="flex flex-col">
-            <span class="mt-1 text-base text-center">{{ dayString }}</span>
-            <span class="mt-1 text-base text-center">{{ hourString }}</span>
-            <span class="mt-1 text-base text-center">{{ minuteString }}</span>
-            <span class="mt-1 text-base text-center">{{ secondString }}</span>
+    <div class="bg-black/40 flex-1 h-[240px] w-[190px]">
+      <div v-show="isReady" class="relative flex flex-col items-center justify-center p-4 flex-1">
+        <div class="flex items-center absolute top-[10px] right-[10px]">
+          <div class="py-1 px-2 cursor-pointer hover:opacity-70" @click="onClickEdit">
+            <edit-icon class="fill-white w-4 h-4" />
+          </div>
+          <div class="py-1 px-2 cursor-pointer hover:opacity-70" @click="onClickRemove">
+            <trash-icon class="fill-white w-4 h-4" />
           </div>
         </div>
-      </countdown>
-      <div v-else class="flex flex-col items-center justify-center">
-        {{ formatedEventDate }}
-        <check-icon class="mt-5 w-8 h-8 fill-green-600" />
+        <div class="text-[40px] font-bold mb-1 overflow-hidden">{{ eventName }}</div>
+        <countdown v-if="!hasEventPassed" :time="countdownDate" :emit-events="true" @progress="calculateCountdownProgress">
+          <div class="flex flex-col items-center justify-center">
+            <div class="text-2xl mr-1 text-center">{{ weekString }}</div>
+            <div class="flex flex-col">
+              <span class="mt-1 text-base text-center">{{ dayString }}</span>
+              <span class="mt-1 text-base text-center">{{ hourString }}</span>
+              <span class="mt-1 text-base text-center">{{ minuteString }}</span>
+              <span class="mt-1 text-base text-center">{{ secondString }}</span>
+            </div>
+          </div>
+        </countdown>
+        <city-data :event-city="eventCity" :event-country="eventCountry" />
+        <div v-if="hasEventPassed" class="flex flex-col items-center justify-center">
+          {{ formatedEventDate }}
+          <check-icon class="mt-5 w-8 h-8 fill-green-600" />
+        </div>
       </div>
     </div>
   </div>
