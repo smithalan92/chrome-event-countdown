@@ -1,5 +1,5 @@
 import { createStore } from 'vuex';
-import { set } from './utils/storage';
+import { get, set } from './utils/storage';
 
 export default createStore({
   state: {
@@ -62,8 +62,17 @@ export default createStore({
       set('data', data);
     },
 
-    restoreState({ commit }, data) {
-      commit('RESTORE_STATE', data);
+    async restoreState({ commit }) {
+      const data = await get('data');
+
+      if (data) {
+        if (data.events) {
+          data.events.forEach((event) => {
+            event.eventDate = new Date(event.eventDate);
+          });
+        }
+        commit('RESTORE_STATE', data);
+      }
     },
 
     addEvent({ commit }, event) {
@@ -97,5 +106,7 @@ export default createStore({
     openAddEventModal() {},
 
     openAddStickyNoteModal() {},
+
+    openSettingsModal() {},
   },
 });
