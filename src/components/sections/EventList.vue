@@ -3,11 +3,11 @@
     <dragable v-model="events" item-key="id" group="events" class="flex flex-1" @start="drag = true" @end="drag = false">
       <template #item="{ element }">
         <event
-          :event-id="element.eventId"
-          :event-name="element.eventName"
+          :event-id="element.id"
+          :event-name="element.name"
           :event-date="element.eventDate"
-          :event-country="element.eventCountry"
-          :event-city="element.eventCity"
+          :event-country="element.country"
+          :event-city="element.city"
           :background="element.background" />
       </template>
     </dragable>

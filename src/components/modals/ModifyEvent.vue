@@ -25,6 +25,7 @@
         <input
           ref="nameRef"
           v-model="eventName"
+          placeholder="Your event name"
           class="flex-1 p-1 rounded border border-solid border-gray-200 outline-none h-9"
           type="text" />
       </div>
@@ -40,8 +41,13 @@
         </div>
       </div>
       <transition name="zoom">
-        <div v-if="eventBackgroundImage" class="flex flex-1 justify-center items-center p-5">
-          <img class="max-h-[120px]" :src="eventBackgroundImage" />
+        <div class="flex flex-1 justify-center items-center p-5">
+          <div
+            v-if="!eventBackgroundImage"
+            class="flex items-center justify-center h-[120px] w-[212px] border border-dashed border-grey-300">
+            <span class="text-sm text-gray-400 select-none">Your image here</span>
+          </div>
+          <img class="h-[120px]" :src="eventBackgroundImage" />
         </div>
       </transition>
     </template>
@@ -79,7 +85,7 @@ const nameRef = ref(null);
 
 const eventId = ref(null);
 const eventName = ref('');
-const eventDate = ref('');
+const eventDate = ref(new Date().toISOString());
 const eventBackgroundImage = ref('');
 const countries = ref([]);
 const cities = ref([]);
@@ -169,42 +175,34 @@ const validateInput = () => {
   return true;
 };
 
-const onClickAdd = () => {
+const onClickAdd = async () => {
   if (!validateInput()) {
     console.log('invalid input');
     return;
   }
 
-  const date = new Date(eventDate.value);
-  const newEventId = Math.floor(Math.random() * Date.now());
-
-  store.dispatch('addEvent', {
-    eventId: newEventId,
-    eventName: eventName.value,
-    eventDate: date,
+  await store.dispatch('addEvent', {
+    name: eventName.value,
+    date: eventDate.value,
     background: eventBackgroundImage.value,
-    eventCountry: selectedCountry.value,
-    eventCity: selectedCity.value,
+    cityId: selectedCity.value.id,
   });
 
   modal.value.close();
 };
 
-const onClickEdit = () => {
+const onClickEdit = async () => {
   if (!validateInput()) {
     console.log('invalid input');
     return;
   }
 
-  const date = new Date(eventDate.value);
-
-  store.dispatch('updateEvent', {
+  await store.dispatch('updateEvent', {
     eventId: eventId.value,
-    eventName: eventName.value,
-    eventDate: date,
+    name: eventName.value,
+    date: eventDate.value,
     background: eventBackgroundImage.value,
-    eventCountry: selectedCountry.value,
-    eventCity: selectedCity.value,
+    cityId: selectedCity.value.id,
   });
 
   modal.value.close();

@@ -28,7 +28,8 @@ import { computed } from 'vue';
 const store = useStore();
 
 // Restore events and notes
-store.dispatch('restoreState');
+store.dispatch('startApp');
+// store.dispatch('loadAppData');
 
 const hasEvents = computed(() => {
   return store.state.events.length > 0;
