@@ -102,3 +102,19 @@ export async function deleteEvent({ eventId }, { authToken }) {
     },
   });
 }
+
+export async function reorderEvents({ eventIds }, { authToken }) {
+  const { data } = await http.put(
+    `/events/reorder`,
+    {
+      eventIds,
+    },
+    {
+      headers: {
+        Authorization: authToken,
+      },
+    },
+  );
+
+  return data.events;
+}

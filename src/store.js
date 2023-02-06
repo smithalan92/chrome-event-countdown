@@ -1,141 +1,156 @@
-import { createStore } from 'vuex';
-import { addEvent, deleteEvent, getAppData, login, updateEvent } from './api';
+import { ref } from 'vue';
+import { defineStore } from 'pinia';
+import * as api from './api';
 import { get, set } from './utils/storage';
+import { computed } from 'vue';
 
-export default createStore({
-  state: {
-    events: [],
-    notes: [],
-    user: null,
-  },
+export const useAppStore = defineStore('app', () => {
+  const events = ref([]);
 
-  mutations: {
-    RESTORE_STATE(state, { user, events }) {
-      state.user = user;
-      state.events = events;
-    },
+  const sortedEvents = computed(() => {
+    return events.value.sort((a, b) => {
+      if (a.order > b.order) return 1;
+      if (a.order < b.order) return -1;
+      return 0;
+    });
+  });
+  const isReorderingEvents = ref(false);
 
-    ADD_EVENT(state, event) {
-      state.events.push(event);
-    },
+  const notes = ref([]);
+  const user = ref(null);
 
-    SET_EVENTS(state, events) {
-      state.events = events;
-    },
+  const syncState = () => {
+    set('user', user.value);
+  };
 
-    REMOVE_EVENT(state, eventId) {
-      const index = state.events.findIndex((event) => event.id === eventId);
-      state.events.splice(index, 1);
-    },
+  const restoreState = async () => {
+    const _user = await get('user');
+    const _events = await get('events');
 
-    UPDATE_EVENT(state, event) {
-      const eventIndex = state.events.findIndex((e) => e.id === event.id);
+    _events.forEach((event) => {
+      event.eventDate = new Date(event.eventDate);
+    });
 
-      if (eventIndex > -1) {
-        state.events.splice(eventIndex, 1, event);
-      }
-    },
+    user.value = _user;
+    events.value = _events;
+  };
 
-    ADD_NOTE(state, note) {
-      state.notes.push(note);
-    },
+  const setEvents = (_events) => {
+    events.value = _events;
+  };
 
-    UPDATE_NOTE(state, { noteId, text }) {
-      const noteIndex = state.notes.findIndex((n) => n.id === noteId);
-      const note = state.notes[noteIndex];
-      if (noteIndex > -1) {
-        state.notes.splice(noteIndex, 1, { ...note, text });
-      }
-    },
+  const addEvent = async ({ name, date, background, cityId }) => {
+    const event = await api.addEvent({ name, date, background, cityId }, { authToken: user.value.token });
+    events.value.push(event);
+    set('events', events.value);
+  };
 
-    REMOVE_NOTE(state, id) {
-      const index = state.notes.findIndex((note) => note.id === id);
-      state.notes.splice(index, 1);
-    },
+  const removeEvent = async (eventId) => {
+    await api.deleteEvent({ eventId }, { authToken: user.value.token });
+    const index = events.value.findIndex((event) => event.id === eventId);
+    events.value.splice(index, 1);
+    set('events', events.value);
+  };
 
-    SET_USER(state, user) {
-      state.user = user;
-    },
-  },
+  const updateEvent = async ({ eventId, name, date, background, cityId }) => {
+    const event = await api.updateEvent({ eventId, name, date, background, cityId }, { authToken: user.value.token });
+    const eventIndex = events.value.findIndex((e) => e.id === event.id);
+    events.value.splice(eventIndex, 1, event);
+    set('events', events.value);
+  };
 
-  actions: {
-    syncState({ state }) {
-      set('user', state.user);
-    },
+  const reorderEvents = async (newlyOrderedEvents) => {
+    isReorderingEvents.value = true;
 
-    async restoreState({ commit }) {
-      const user = await get('user');
-      const events = await get('events');
-
-      events.forEach((event) => {
+    const originalEventOrder = events.value;
+    events.value = newlyOrderedEvents.map((e, index) => {
+      e.order = index + 1;
+      return e;
+    });
+    const newOrderIds = newlyOrderedEvents.map((event) => event.id);
+    try {
+      const _events = await api.reorderEvents({ eventIds: newOrderIds }, { authToken: user.value.token });
+      _events.forEach((event) => {
         event.eventDate = new Date(event.eventDate);
       });
 
-      commit('RESTORE_STATE', { user, events });
-    },
+      setEvents(_events);
+      set('events', events.value);
+    } catch (e) {
+      events.value = originalEventOrder;
+    } finally {
+      isReorderingEvents.value = false;
+    }
+  };
 
-    async addEvent({ commit, state }, { name, date, background, cityId }) {
-      const event = await addEvent({ name, date, background, cityId }, { authToken: state.user.token });
-      commit('ADD_EVENT', event);
-    },
+  const addNote = (note) => {
+    notes.value.push(note);
+  };
 
-    setEvents({ commit }, events) {
-      commit('SET_EVENTS', events);
-    },
+  const updateNote = ({ noteId, text }) => {
+    const noteIndex = notes.value.findIndex((n) => n.id === noteId);
+    const note = notes.value[noteIndex];
+    notes.value.splice(noteIndex, 1, { ...note, text });
+  };
 
-    async removeEvent({ commit, state }, eventId) {
-      await deleteEvent({ eventId }, { authToken: state.user.token });
-      commit('REMOVE_EVENT', eventId);
-    },
+  const removeNote = (id) => {
+    const index = notes.value.findIndex((note) => note.id === id);
+    notes.value.splice(index, 1);
+  };
 
-    async updateEvent({ commit, state }, { eventId, name, date, background, cityId }) {
-      const event = await updateEvent({ eventId, name, date, background, cityId }, { authToken: state.user.token });
-      commit('UPDATE_EVENT', event);
-    },
+  const login = async ({ email, password }) => {
+    const { user, token } = await api.login({ email, password });
 
-    addNote({ commit }, note) {
-      commit('ADD_NOTE', note);
-    },
+    user.value = {
+      id: user.id,
+      email: user.email,
+      token: token,
+    };
+  };
 
-    updateNote({ commit }, { noteId, text }) {
-      commit('UPDATE_NOTE', { noteId, text });
-    },
+  const loadAppData = async () => {
+    if (!user.value) return;
+    const { events: _events } = await api.getAppData(user.value.token);
 
-    removeNote({ commit }, id) {
-      commit('REMOVE_NOTE', id);
-    },
+    _events.forEach((event) => {
+      event.eventDate = new Date(event.eventDate);
+    });
 
-    async login({ commit }, { email, password }) {
-      const { user, token } = await login({ email, password });
+    setEvents(_events);
+    set('events', _events);
+  };
 
-      commit('SET_USER', {
-        id: user.id,
-        email: user.email,
-        token: token,
-      });
-    },
+  const startApp = async () => {
+    await restoreState();
+    await loadAppData();
+  };
 
-    async loadAppData({ commit, state }) {
-      if (!state.user) return;
-      const { events } = await getAppData(state.user.token);
+  // Modal open helpers - TODO replace
+  const openAddEventModal = () => {};
+  const openAddStickyNoteModal = () => {};
+  const openSettingsModal = () => {};
 
-      events.forEach((event) => {
-        event.eventDate = new Date(event.eventDate);
-      });
-
-      commit('SET_EVENTS', events);
-      set('events', events);
-    },
-
-    async startApp({ dispatch }) {
-      await dispatch('restoreState');
-      dispatch('loadAppData');
-    },
-
-    openAddEventModal() {},
-
-    openAddStickyNoteModal() {},
-
-    openSettingsModal() {},
-  },
+  return {
+    user,
+    events,
+    sortedEvents,
+    isReorderingEvents,
+    notes,
+    syncState,
+    restoreState,
+    setEvents,
+    reorderEvents,
+    addEvent,
+    removeEvent,
+    updateEvent,
+    addNote,
+    updateNote,
+    removeNote,
+    login,
+    loadAppData,
+    startApp,
+    openAddEventModal,
+    openAddStickyNoteModal,
+    openSettingsModal,
+  };
 });

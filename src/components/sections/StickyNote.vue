@@ -8,34 +8,25 @@
     </div>
   </div>
 </template>
-<script>
+<script setup>
 import CloseIcon from '../../assets/icons/close.svg';
+import { defineProps } from 'vue';
 
-export default {
-  name: 'StickyNote',
-
-  components: {
-    CloseIcon,
+const props = defineProps({
+  note: {
+    type: Object,
+    required: true,
   },
+});
 
-  props: {
-    note: {
-      type: Object,
-      required: true,
-    },
-  },
+const emit = defineEmits(['delete', 'update']);
 
-  emits: ['delete', 'update'],
+const deleteNote = () => {
+  emit('delete', props.note.id);
+};
 
-  methods: {
-    deleteNote() {
-      this.$emit('delete', this.note.id);
-    },
-
-    updateNote(e) {
-      const newText = e.target.value;
-      this.$emit('update', { noteId: this.note.id, text: newText });
-    },
-  },
+const updateNote = (e) => {
+  const newText = e.target.value;
+  emit('update', { noteId: props.note.id, text: newText });
 };
 </script>

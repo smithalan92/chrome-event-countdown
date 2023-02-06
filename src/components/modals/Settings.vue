@@ -8,17 +8,16 @@
 </template>
 <script setup>
 import { ref, onMounted } from 'vue';
-import { useStore } from 'vuex';
+import { useAppStore } from '../../store';
 import Login from '../sections/Login.vue';
 import ModalBase from './ModalBase.vue';
 
 const modalRef = ref(null);
-const store = useStore();
+const store = useAppStore();
 
 onMounted(() => {
-  store.subscribeAction((action) => {
-    const { type } = action;
-    if (type === 'openSettingsModal') {
+  store.$onAction(({ name }) => {
+    if (name === 'openSettingsModal') {
       modalRef.value.open();
     }
   });

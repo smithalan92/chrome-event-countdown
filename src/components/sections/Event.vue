@@ -34,129 +34,115 @@
     </div>
   </div>
 </template>
-<script>
+<script setup>
 import Countdown from '@chenfengyuan/vue-countdown';
 import format from 'date-fns/format';
 import CityData from './CityData.vue';
 import TrashIcon from '../../assets/icons/trash.svg';
 import EditIcon from '../../assets/icons/edit.svg';
 import CheckIcon from '../../assets/icons/check.svg';
+import { useAppStore } from '../../store';
+import { computed, ref, onMounted, watch } from 'vue';
 
-// @vue/component
-export default {
-  name: 'Event',
+const store = useAppStore();
 
-  components: {
-    Countdown,
-    CityData,
-    TrashIcon,
-    EditIcon,
-    CheckIcon,
+const props = defineProps({
+  eventId: {
+    type: Number,
+    required: true,
   },
 
-  props: {
-    eventId: {
-      type: Number,
-      required: true,
-    },
-
-    eventName: {
-      type: String,
-      required: true,
-    },
-
-    eventDate: {
-      type: Date,
-      required: true,
-    },
-
-    background: {
-      type: String,
-      required: false,
-      default: '',
-    },
-
-    eventCountry: {
-      type: [Object, null],
-      required: false,
-      default: null,
-    },
-
-    eventCity: {
-      type: [Object, null],
-      required: false,
-      default: null,
-    },
+  eventName: {
+    type: String,
+    required: true,
   },
 
-  data() {
-    return {
-      weekString: '',
-      dayString: '',
-      hourString: '',
-      minuteString: '',
-      secondString: '',
-      isReady: false,
-      formatedEventDate: format(this.eventDate, 'dd MMMM yyyy, h:mma'),
-    };
+  eventDate: {
+    type: Date,
+    required: true,
   },
 
-  computed: {
-    countdownDate() {
-      return this.eventDate.getTime() - Date.now();
-    },
-
-    hasEventPassed() {
-      return this.countdownDate < 0;
-    },
+  background: {
+    type: String,
+    required: false,
+    default: '',
   },
 
-  watch: {
-    hasEventPassed() {
-      this.isReady = true;
-    },
+  eventCountry: {
+    type: [Object, null],
+    required: false,
+    default: null,
   },
 
-  mounted() {
-    if (this.hasEventPassed) this.isReady = true;
+  eventCity: {
+    type: [Object, null],
+    required: false,
+    default: null,
   },
+});
 
-  methods: {
-    calculateCountdownProgress({ days, hours, minutes, seconds }) {
-      const weekCount = Math.floor(days / 7);
-      const dayCount = days % 7;
+const weekString = ref('');
+const dayString = ref('');
+const hourString = ref('');
+const minuteString = ref('');
+const secondString = ref('');
+const isReady = ref(false);
 
-      this.weekString = this.getTimeString(weekCount, 'week');
+const formatedEventDate = computed(() => {
+  return format(props.eventDate, 'dd MMMM yyyy, h:mma');
+});
 
-      this.dayString = this.getTimeString(dayCount, 'day');
+const countdownDate = computed(() => {
+  return props.eventDate.getTime() - Date.now();
+});
 
-      this.hourString = this.getTimeString(hours, 'hour');
+const hasEventPassed = computed(() => {
+  return countdownDate.value < 0;
+});
 
-      this.minuteString = this.getTimeString(minutes, 'minute');
-
-      this.secondString = this.getTimeString(seconds, 'second');
-
-      if (!this.isReady) this.isReady = true;
-    },
-
-    getTimeString(value, type) {
-      return `${value} ${type}${value !== 1 ? 's' : ''}`;
-    },
-
-    onClickRemove() {
-      this.$store.dispatch('removeEvent', this.eventId);
-    },
-
-    onClickEdit() {
-      this.$store.dispatch('openAddEventModal', {
-        eventId: this.eventId,
-        eventName: this.eventName,
-        eventDate: this.eventDate.toISOString(),
-        eventBackgroundImage: this.background,
-        eventCountry: this.eventCountry,
-        eventCity: this.eventCity,
-      });
-    },
-  },
+const getTimeString = (value, type) => {
+  return `${value} ${type}${value !== 1 ? 's' : ''}`;
 };
+
+const calculateCountdownProgress = ({ days, hours, minutes, seconds }) => {
+  const weekCount = Math.floor(days / 7);
+  const dayCount = days % 7;
+
+  weekString.value = getTimeString(weekCount, 'week');
+
+  dayString.value = getTimeString(dayCount, 'day');
+
+  hourString.value = getTimeString(hours, 'hour');
+
+  minuteString.value = getTimeString(minutes, 'minute');
+
+  secondString.value = getTimeString(seconds, 'second');
+
+  if (!isReady.value) isReady.value = true;
+};
+
+const onClickRemove = () => {
+  store.removeEvent(props.eventId);
+};
+
+const onClickEdit = () => {
+  store.openAddEventModal({
+    eventId: props.eventId,
+    eventName: props.eventName,
+    eventDate: props.eventDate.toISOString(),
+    eventBackgroundImage: props.background,
+    eventCountry: props.eventCountry,
+    eventCity: props.eventCity,
+  });
+};
+
+watch(hasEventPassed, () => {
+  isReady.value = true;
+});
+
+onMounted(() => {
+  if (hasEventPassed.value) {
+    isReady.value = true;
+  }
+});
 </script>

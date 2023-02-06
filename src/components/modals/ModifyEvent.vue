@@ -75,11 +75,11 @@ import '@vuepic/vue-datepicker/dist/main.css';
 import 'vue-select/dist/vue-select.css';
 import ModalBase from './ModalBase.vue';
 import { ref, onMounted, watch, computed } from 'vue';
-import { useStore } from 'vuex';
+import { useAppStore } from '../../store';
 import { getCountries, getCitiesForCountry } from '../../api';
 
 let abortController = null;
-const store = useStore();
+const store = useAppStore();
 const modal = ref(null);
 const nameRef = ref(null);
 
@@ -117,16 +117,16 @@ watch(
 
 onMounted(() => {
   loadCountries();
-  store.subscribeAction((action) => {
-    const { payload, type } = action;
-    if (type === 'openAddEventModal') {
-      if (payload) {
-        eventId.value = payload.eventId;
-        eventName.value = payload.eventName;
-        eventDate.value = payload.eventDate;
-        selectedCountry.value = payload.eventCountry;
-        selectedCity.value = payload.eventCity;
-        eventBackgroundImage.value = payload.eventBackgroundImage;
+  store.$onAction(({ name, args }) => {
+    if (name === 'openAddEventModal') {
+      const data = args[0];
+      if (data) {
+        eventId.value = data.eventId;
+        eventName.value = data.eventName;
+        eventDate.value = data.eventDate;
+        selectedCountry.value = data.eventCountry;
+        selectedCity.value = data.eventCity;
+        eventBackgroundImage.value = data.eventBackgroundImage;
       }
 
       modal.value.open();
@@ -181,7 +181,7 @@ const onClickAdd = async () => {
     return;
   }
 
-  await store.dispatch('addEvent', {
+  await store.addEvent({
     name: eventName.value,
     date: eventDate.value,
     background: eventBackgroundImage.value,
@@ -197,7 +197,7 @@ const onClickEdit = async () => {
     return;
   }
 
-  await store.dispatch('updateEvent', {
+  await store.updateEvent({
     eventId: eventId.value,
     name: eventName.value,
     date: eventDate.value,

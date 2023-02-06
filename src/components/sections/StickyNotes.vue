@@ -3,30 +3,20 @@
     <StickyNote v-for="note in notes" :key="note.id" :note="note" @delete="deleteNote" @update="updateNote" />
   </div>
 </template>
-<script>
+<script setup>
 import StickyNote from './StickyNote.vue';
+import { computed } from 'vue';
+import { useAppStore } from '../../store';
 
-export default {
-  name: 'StickyNotes',
+const store = useAppStore();
 
-  components: {
-    StickyNote,
-  },
+const notes = computed(() => store.notes);
 
-  computed: {
-    notes() {
-      return this.$store.state.notes;
-    },
-  },
+const deleteNote = (noteId) => {
+  store.removeNote(noteId);
+};
 
-  methods: {
-    deleteNote(noteId) {
-      this.$store.dispatch('removeNote', noteId);
-    },
-
-    updateNote({ noteId, text }) {
-      this.$store.dispatch('updateNote', { noteId, text });
-    },
-  },
+const updateNote = ({ noteId, text }) => {
+  store.updateNote({ noteId, text });
 };
 </script>

@@ -12,72 +12,55 @@
     <span class="font-bold py-[2px] px-3 text-center text-sm"> in {{ eventCity.name }}, {{ eventCountry.name }} </span>
   </div>
 </template>
-<script>
-/* eslint-disable vue/require-default-prop */
-/* eslint-disable vue/require-prop-types */
+<script setup>
 import moment from 'moment-timezone';
 import { getWeatherForCity } from '../../api';
 import WeatherIcon from '../widgets/WeatherIcon';
+import { defineProps, ref, watch, onMounted } from 'vue';
 
-// @vue/component
-export default {
-  name: 'CityData',
-
-  components: {
-    WeatherIcon,
+const props = defineProps({
+  eventCountry: {
+    type: Object,
+    required: true,
   },
 
-  props: {
-    eventCountry: {
-      required: false,
-    },
-
-    eventCity: {
-      required: false,
-    },
+  eventCity: {
+    type: Object,
+    required: true,
   },
+});
 
-  data() {
-    return {
-      weather: null,
-      triggerInt: true,
-      localTime: '',
-    };
-  },
+const weather = ref(null);
+const localTime = ref('');
 
-  watch: {
-    'eventCity.id': function (newValue) {
-      if (newValue) {
-        this.getCurrentWeather();
-      } else {
-        this.weather = null;
-      }
-    },
-  },
-
-  mounted() {
-    if (this.eventCity) {
-      this.getCurrentWeather();
-
-      if (this.eventCity.timezoneName) {
-        this.triggerTimeUpdate();
-      }
-    }
-  },
-
-  methods: {
-    async getCurrentWeather() {
-      const data = await getWeatherForCity(this.eventCity.id);
-      this.weather = data;
-    },
-
-    triggerTimeUpdate() {
-      this.localTime = moment().tz(this.eventCity.timezoneName).format('h:mma');
-
-      setTimeout(() => {
-        window.requestAnimationFrame(() => this.triggerTimeUpdate());
-      }, 10000);
-    },
-  },
+const getCurrentWeather = async () => {
+  const data = await getWeatherForCity(props.eventCity.id);
+  weather.value = data;
 };
+
+const triggerTimeUpdate = () => {
+  localTime.value = moment().tz(props.eventCity.timezoneName).format('h:mma');
+
+  setTimeout(() => {
+    window.requestAnimationFrame(() => triggerTimeUpdate());
+  }, 10000);
+};
+
+watch(props.eventCity, (newValue) => {
+  if (newValue) {
+    getCurrentWeather();
+  } else {
+    weather.value = null;
+  }
+});
+
+onMounted(() => {
+  if (props.eventCity) {
+    getCurrentWeather();
+
+    if (props.eventCity?.timezoneName) {
+      triggerTimeUpdate();
+    }
+  }
+});
 </script>

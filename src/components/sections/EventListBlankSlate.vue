@@ -6,16 +6,6 @@
     <div class="text-white flex-1 text-center p-9 bg-black/40">No upcoming events</div>
   </div>
 </template>
-<script>
+<script setup>
 import bgImage from '../../assets/blank_slate_bg.jpg';
-
-export default {
-  name: 'EventListBlankSlate',
-
-  setup() {
-    return {
-      bgImage,
-    };
-  },
-};
 </script>

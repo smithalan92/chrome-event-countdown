@@ -18,30 +18,21 @@ import ModifyEvent from './modals/ModifyEvent.vue';
 import BlankSlate from './sections/EventListBlankSlate.vue';
 import AddPopover from './widgets/AddPopover.vue';
 import AddStickyNote from './modals/AddStickyNote.vue';
-import { STORE_EVENTS_TO_SYNC } from '../constants';
 import StickyNotes from './sections/StickyNotes.vue';
 import SettingsIcon from '../assets/icons/settings.svg';
 import SettingsModal from './modals/Settings.vue';
-import { useStore } from 'vuex';
 import { computed } from 'vue';
+import { useAppStore } from '../store';
 
-const store = useStore();
+const store = useAppStore();
 
-// Restore events and notes
-store.dispatch('startApp');
-// store.dispatch('loadAppData');
+store.startApp();
 
 const hasEvents = computed(() => {
-  return store.state.events.length > 0;
+  return store.events.length > 0;
 });
 
 const onClickSettings = () => {
-  store.dispatch('openSettingsModal');
+  store.openSettingsModal();
 };
-
-store.subscribe((mutation) => {
-  if (STORE_EVENTS_TO_SYNC.includes(mutation.type)) {
-    store.dispatch('syncState');
-  }
-});
 </script>

@@ -25,22 +25,21 @@
 </template>
 <script setup>
 import { computed, ref, onMounted } from 'vue';
-import { useStore } from 'vuex';
+import { useAppStore } from '../../store';
 import ModalBase from './ModalBase.vue';
 
 const modal = ref(null);
 const textarea = ref(null);
 const text = ref('');
-const store = useStore();
+const store = useAppStore();
 
 const hasText = computed(() => {
   return text.value.trim().length > 0;
 });
 
 onMounted(() => {
-  store.subscribeAction((action) => {
-    const { type } = action;
-    if (type === 'openAddStickyNoteModal') {
+  store.$onAction(({ name }) => {
+    if (name === 'openAddStickyNoteModal') {
       modal.value.open();
     }
   });
@@ -55,7 +54,7 @@ const onModalClose = () => {
 };
 
 const onClickAdd = () => {
-  store.dispatch('addNote', {
+  store.addNote({
     id: Math.floor(Math.random() * Date.now()),
     text: text.value,
   });

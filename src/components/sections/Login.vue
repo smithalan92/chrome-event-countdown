@@ -19,14 +19,14 @@
 </template>
 <script setup>
 import { computed, ref } from 'vue';
-import { useStore } from 'vuex';
+import { useAppStore } from '../../store';
 
-const store = useStore();
+const store = useAppStore();
 const email = ref('');
 const password = ref('');
 
 const user = computed(() => {
-  return store.state.user;
+  return store.user;
 });
 
 const isLoggedIn = computed(() => {
@@ -39,6 +39,6 @@ const canLogin = computed(() => {
 
 const onClickLogin = () => {
   if (!canLogin.value) return;
-  store.dispatch('login', { email: email.value, password: password.value });
+  store.login({ email: email.value, password: password.value });
 };
 </script>
