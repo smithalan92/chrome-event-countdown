@@ -66,3 +66,32 @@ export interface Note {
   id: number;
   text: string;
 }
+
+export interface GetNotesResponse {
+  notes: Note[];
+}
+
+export interface AddNoteBody {
+  text: string;
+}
+
+export interface AddNoteResponse {
+  note: Note;
+}
+
+export interface UpdateNoteParams {
+  id: number;
+  text: string;
+}
+
+export interface UpdateNoteResponse {
+  note: Note;
+}
+
+export interface DeleteNoteParams {
+  id: number;
+}
+
+export interface RequestOptions {
+  authToken?: string;
+}

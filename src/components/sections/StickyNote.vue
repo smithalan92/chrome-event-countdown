@@ -17,7 +17,7 @@ const props = defineProps<{
 
 const emit = defineEmits<{
   (e: 'delete', id: number): void;
-  (e: 'update', { noteId, text }: { noteId: number; text: string }): void;
+  (e: 'update', { id, text }: { id: number; text: string }): void;
 }>();
 
 const deleteNote = () => {
@@ -26,6 +26,6 @@ const deleteNote = () => {
 
 const updateNote = (e: Event) => {
   const newText = (e.target as HTMLTextAreaElement).value;
-  emit('update', { noteId: props.note.id, text: newText });
+  emit('update', { id: props.note.id, text: newText });
 };
 </script>

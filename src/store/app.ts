@@ -3,10 +3,13 @@ import { defineStore } from 'pinia';
 import * as api from '../api/api';
 import { get, set } from '../utils/storage';
 import { computed } from 'vue';
+import { useNoteStore } from './notes';
 import type { Event, Note } from '../api/api.types';
 import type { AppUser } from './app.types';
 
 export const useAppStore = defineStore('app', () => {
+  const noteStore = useNoteStore();
+
   const events = ref<Event[]>([]);
 
   const sortedEvents = computed<Event[]>(() => {
@@ -125,6 +128,7 @@ export const useAppStore = defineStore('app', () => {
 
   const loadAppData = async () => {
     if (!user.value) return;
+    noteStore.loadNotes();
     const { events: _events } = await api.getAppData(user.value.token);
 
     _events.forEach((event) => {
@@ -142,7 +146,6 @@ export const useAppStore = defineStore('app', () => {
 
   // Modal open helpers - TODO replace
   const openAddEventModal = (_event?: Event) => {};
-  const openAddStickyNoteModal = () => {};
   const openSettingsModal = () => {};
 
   return {
@@ -165,7 +168,6 @@ export const useAppStore = defineStore('app', () => {
     loadAppData,
     startApp,
     openAddEventModal,
-    openAddStickyNoteModal,
     openSettingsModal,
   };
 });

@@ -25,13 +25,13 @@
 </template>
 <script setup lang="ts">
 import { computed, ref, onMounted } from 'vue';
-import { useAppStore } from '../../store/app';
+import { useNoteStore } from '../../store/notes';
 import ModalBase from './ModalBase.vue';
 
 const modal = ref<typeof ModalBase | null>(null);
 const textarea = ref<HTMLTextAreaElement | null>(null);
 const text = ref('');
-const store = useAppStore();
+const store = useNoteStore();
 
 const hasText = computed(() => {
   return text.value.trim().length > 0;
@@ -55,7 +55,6 @@ const onModalClose = () => {
 
 const onClickAdd = () => {
   store.addNote({
-    id: Math.floor(Math.random() * Date.now()),
     text: text.value,
   });
 

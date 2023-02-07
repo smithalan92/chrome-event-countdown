@@ -5,10 +5,11 @@
 </template>
 <script setup lang="ts">
 import StickyNote from './StickyNote.vue';
+import { debounce } from 'lodash';
 import { computed } from 'vue';
-import { useAppStore } from '../../store/app';
+import { useNoteStore } from '../../store/notes';
 
-const store = useAppStore();
+const store = useNoteStore();
 
 const notes = computed(() => store.notes);
 
@@ -16,7 +17,11 @@ const deleteNote = (noteId: number) => {
   store.removeNote(noteId);
 };
 
-const updateNote = ({ noteId, text }: { noteId: number; text: string }) => {
-  store.updateNote({ noteId, text });
+const debounceUpdateNote = debounce((id: number, text: string) => {
+  store.updateNote({ id, text });
+}, 1000);
+
+const updateNote = ({ id, text }: { id: number; text: string }) => {
+  debounceUpdateNote(id, text);
 };
 </script>

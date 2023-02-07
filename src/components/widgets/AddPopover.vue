@@ -25,8 +25,10 @@
 import PlusIcon from '../../assets/icons/plus.svg?component';
 import { ref } from 'vue';
 import { useAppStore } from '../../store/app';
+import { useNoteStore } from '@/store/notes';
 
-const store = useAppStore();
+const appStore = useAppStore();
+const noteStore = useNoteStore();
 
 const isPopoverOpen = ref(false);
 
@@ -35,12 +37,12 @@ const togglePopover = () => {
 };
 
 const openAddEventModal = () => {
-  store.openAddEventModal();
+  appStore.openAddEventModal();
   togglePopover();
 };
 
 const openAddNoteModal = () => {
-  store.openAddStickyNoteModal();
+  noteStore.openAddStickyNoteModal();
   isPopoverOpen.value = false;
 };
 </script>
