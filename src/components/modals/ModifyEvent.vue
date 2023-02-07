@@ -75,13 +75,13 @@ import '@vuepic/vue-datepicker/dist/main.css';
 import 'vue-select/dist/vue-select.css';
 import ModalBase from './ModalBase.vue';
 import { ref, onMounted, watch, computed } from 'vue';
-import { useAppStore } from '../../store/app';
+import { useEventStore } from '@/store/events';
 import { getCountries, getCitiesForCountry } from '../../api/api';
 import type { City, Country } from '@/api/api.types';
 import type { AxiosError } from 'axios';
 
 let abortController: AbortController | null = null;
-const store = useAppStore();
+const eventStore = useEventStore();
 const modal = ref<typeof ModalBase | null>(null);
 const nameRef = ref<HTMLInputElement | null>(null);
 
@@ -119,7 +119,7 @@ watch(
 
 onMounted(() => {
   loadCountries();
-  store.$onAction(({ name, args }) => {
+  eventStore.$onAction(({ name, args }) => {
     if (name === 'openAddEventModal') {
       const event = args[0];
       if (event) {
@@ -183,7 +183,7 @@ const onClickAdd = async () => {
     return;
   }
 
-  await store.addEvent({
+  await eventStore.addEvent({
     name: eventName.value,
     date: eventDate.value,
     background: eventBackgroundImage.value,
@@ -199,7 +199,7 @@ const onClickEdit = async () => {
     return;
   }
 
-  await store.updateEvent({
+  await eventStore.updateEvent({
     eventId: eventId.value!,
     name: eventName.value,
     date: eventDate.value,

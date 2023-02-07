@@ -58,7 +58,7 @@ export async function getWeatherForCity(cityId: number) {
   return data;
 }
 
-export async function getAppData(authToken?: string) {
+export async function getEvents(authToken?: string) {
   const { data } = await http.get<GetAppDataResponse>(`/data`, {
     headers: {
       Authorization: authToken,

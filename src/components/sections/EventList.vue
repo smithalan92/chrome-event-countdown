@@ -14,19 +14,19 @@
 import Event from './Event.vue';
 import Dragable from 'vuedraggable';
 import { computed } from 'vue';
-import { useAppStore } from '../../store/app';
+import { useEventStore } from '@/store/events';
 import Spinner from '../../assets/icons/spinner.svg?component';
 
-const store = useAppStore();
+const eventStore = useEventStore();
 
-const isReorderingEvents = computed(() => store.isReorderingEvents);
+const isReorderingEvents = computed(() => eventStore.isReorderingEvents);
 
 const events = computed({
   get() {
-    return store.sortedEvents;
+    return eventStore.sortedEvents;
   },
   set(events) {
-    store.reorderEvents(events);
+    eventStore.reorderEvents(events);
   },
 });
 </script>

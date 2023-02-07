@@ -24,10 +24,10 @@
 <script setup lang="ts">
 import PlusIcon from '../../assets/icons/plus.svg?component';
 import { ref } from 'vue';
-import { useAppStore } from '../../store/app';
+import { useEventStore } from '@/store/events';
 import { useNoteStore } from '@/store/notes';
 
-const appStore = useAppStore();
+const eventStore = useEventStore();
 const noteStore = useNoteStore();
 
 const isPopoverOpen = ref(false);
@@ -37,7 +37,7 @@ const togglePopover = () => {
 };
 
 const openAddEventModal = () => {
-  appStore.openAddEventModal();
+  eventStore.openAddEventModal();
   togglePopover();
 };
 

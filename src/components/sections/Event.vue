@@ -43,11 +43,11 @@ import CityData from './CityData.vue';
 import TrashIcon from '../../assets/icons/trash.svg?component';
 import EditIcon from '../../assets/icons/edit.svg?component';
 import CheckIcon from '../../assets/icons/check.svg?component';
-import { useAppStore } from '../../store/app';
+import { useEventStore } from '@/store/events';
 import { computed, ref, onMounted, watch } from 'vue';
 import type { Event } from '../../api/api.types';
 
-const store = useAppStore();
+const eventStore = useEventStore();
 
 const props = defineProps<{
   event: Event;
@@ -104,11 +104,11 @@ const calculateCountdownProgress = ({
 };
 
 const onClickRemove = () => {
-  store.removeEvent(props.event.id);
+  eventStore.removeEvent(props.event.id);
 };
 
 const onClickEdit = () => {
-  store.openAddEventModal(props.event);
+  eventStore.openAddEventModal(props.event);
 };
 
 watch(hasEventPassed, () => {

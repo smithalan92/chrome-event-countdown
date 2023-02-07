@@ -23,16 +23,18 @@ import SettingsIcon from '../assets/icons/settings.svg?component';
 import SettingsModal from './modals/Settings.vue';
 import { computed } from 'vue';
 import { useAppStore } from '../store/app';
+import { useEventStore } from '@/store/events';
 
-const store = useAppStore();
+const appStore = useAppStore();
+const eventStore = useEventStore();
 
-store.startApp();
+appStore.startApp();
 
 const hasEvents = computed(() => {
-  return store.events.length > 0;
+  return eventStore.events.length > 0;
 });
 
 const onClickSettings = () => {
-  store.openSettingsModal();
+  appStore.openSettingsModal();
 };
 </script>
