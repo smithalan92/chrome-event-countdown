@@ -23,13 +23,13 @@
     </template>
   </ModalBase>
 </template>
-<script setup>
+<script setup lang="ts">
 import { computed, ref, onMounted } from 'vue';
-import { useAppStore } from '../../store';
+import { useAppStore } from '../../store/app';
 import ModalBase from './ModalBase.vue';
 
-const modal = ref(null);
-const textarea = ref(null);
+const modal = ref<typeof ModalBase | null>(null);
+const textarea = ref<HTMLTextAreaElement | null>(null);
 const text = ref('');
 const store = useAppStore();
 
@@ -40,7 +40,7 @@ const hasText = computed(() => {
 onMounted(() => {
   store.$onAction(({ name }) => {
     if (name === 'openAddStickyNoteModal') {
-      modal.value.open();
+      modal.value!.open();
     }
   });
 });
@@ -59,10 +59,10 @@ const onClickAdd = () => {
     text: text.value,
   });
 
-  modal.value.close();
+  modal.value!.close();
 };
 
 const onClickCancel = () => {
-  modal.value.close();
+  modal.value!.close();
 };
 </script>

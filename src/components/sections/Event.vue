@@ -2,7 +2,7 @@
   <div class="flex items-center justify-center text-white h-full flex-1 cursor-move relative overflow-hidden min-w-[180px]">
     <div
       class="absolute top-0 left-0 w-full h-full bg-cover bg-center bg-no-repeat bg-fixed z-[-1] opacity-70"
-      :style="{ 'background-image': 'url(' + background + ')' }" />
+      :style="{ 'background-image': 'url(' + event.background + ')' }" />
     <div class="bg-black/40 flex-1 h-[240px] w-[190px]">
       <div v-show="isReady" class="relative flex flex-col items-center justify-center p-4 flex-1">
         <div class="flex items-center absolute top-[10px] right-[10px]">
@@ -13,7 +13,7 @@
             <trash-icon class="fill-white w-4 h-4" />
           </div>
         </div>
-        <div class="text-[40px] font-bold mb-1 overflow-hidden">{{ eventName }}</div>
+        <div class="text-[40px] font-bold mb-1 overflow-hidden">{{ event.name }}</div>
         <countdown v-if="!hasEventPassed" :time="countdownDate" :emit-events="true" @progress="calculateCountdownProgress">
           <div class="flex flex-col items-center justify-center">
             <div class="text-2xl mr-1 text-center">{{ weekString }}</div>
@@ -25,7 +25,7 @@
             </div>
           </div>
         </countdown>
-        <city-data :event-city="eventCity" :event-country="eventCountry" />
+        <city-data :event-city="event.city" :event-country="event.country" />
         <div v-if="hasEventPassed" class="flex flex-col items-center justify-center">
           {{ formatedEventDate }}
           <check-icon class="mt-5 w-8 h-8 fill-green-600" />
@@ -34,52 +34,22 @@
     </div>
   </div>
 </template>
-<script setup>
+<script setup lang="ts">
 import Countdown from '@chenfengyuan/vue-countdown';
 import format from 'date-fns/format';
 import CityData from './CityData.vue';
-import TrashIcon from '../../assets/icons/trash.svg';
-import EditIcon from '../../assets/icons/edit.svg';
-import CheckIcon from '../../assets/icons/check.svg';
-import { useAppStore } from '../../store';
+import TrashIcon from '../../assets/icons/trash.svg?component';
+import EditIcon from '../../assets/icons/edit.svg?component';
+import CheckIcon from '../../assets/icons/check.svg?component';
+import { useAppStore } from '../../store/app';
 import { computed, ref, onMounted, watch } from 'vue';
+import type { Event } from '../../api/api.types';
 
 const store = useAppStore();
 
-const props = defineProps({
-  eventId: {
-    type: Number,
-    required: true,
-  },
-
-  eventName: {
-    type: String,
-    required: true,
-  },
-
-  eventDate: {
-    type: Date,
-    required: true,
-  },
-
-  background: {
-    type: String,
-    required: false,
-    default: '',
-  },
-
-  eventCountry: {
-    type: [Object, null],
-    required: false,
-    default: null,
-  },
-
-  eventCity: {
-    type: [Object, null],
-    required: false,
-    default: null,
-  },
-});
+const props = defineProps<{
+  event: Event;
+}>();
 
 const weekString = ref('');
 const dayString = ref('');
@@ -89,22 +59,32 @@ const secondString = ref('');
 const isReady = ref(false);
 
 const formatedEventDate = computed(() => {
-  return format(props.eventDate, 'dd MMMM yyyy, h:mma');
+  return format(props.event.eventDate, 'dd MMMM yyyy, h:mma');
 });
 
 const countdownDate = computed(() => {
-  return props.eventDate.getTime() - Date.now();
+  return props.event.eventDate.getTime() - Date.now();
 });
 
 const hasEventPassed = computed(() => {
   return countdownDate.value < 0;
 });
 
-const getTimeString = (value, type) => {
+const getTimeString = (value: number, type: 'week' | 'day' | 'minute' | 'hour' | 'second') => {
   return `${value} ${type}${value !== 1 ? 's' : ''}`;
 };
 
-const calculateCountdownProgress = ({ days, hours, minutes, seconds }) => {
+const calculateCountdownProgress = ({
+  days,
+  hours,
+  minutes,
+  seconds,
+}: {
+  days: number;
+  hours: number;
+  minutes: number;
+  seconds: number;
+}) => {
   const weekCount = Math.floor(days / 7);
   const dayCount = days % 7;
 
@@ -122,18 +102,11 @@ const calculateCountdownProgress = ({ days, hours, minutes, seconds }) => {
 };
 
 const onClickRemove = () => {
-  store.removeEvent(props.eventId);
+  store.removeEvent(props.event.id);
 };
 
 const onClickEdit = () => {
-  store.openAddEventModal({
-    eventId: props.eventId,
-    eventName: props.eventName,
-    eventDate: props.eventDate.toISOString(),
-    eventBackgroundImage: props.background,
-    eventCountry: props.eventCountry,
-    eventCity: props.eventCity,
-  });
+  store.openAddEventModal(props.event);
 };
 
 watch(hasEventPassed, () => {

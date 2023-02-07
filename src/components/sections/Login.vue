@@ -17,9 +17,9 @@
     </template>
   </div>
 </template>
-<script setup>
+<script setup lang="ts">
 import { computed, ref } from 'vue';
-import { useAppStore } from '../../store';
+import { useAppStore } from '../../store/app';
 
 const store = useAppStore();
 const email = ref('');

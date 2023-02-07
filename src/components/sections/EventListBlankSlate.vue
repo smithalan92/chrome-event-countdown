@@ -6,6 +6,6 @@
     <div class="text-white flex-1 text-center p-9 bg-black/40">No upcoming events</div>
   </div>
 </template>
-<script setup>
+<script setup lang="ts">
 import bgImage from '../../assets/blank_slate_bg.jpg';
 </script>

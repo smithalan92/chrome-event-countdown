@@ -1,15 +1,15 @@
-import Cloudy from '../../assets/icons/weather/cloudy.svg';
-import Fog from '../../assets/icons/weather/fog.svg';
-import PartlyCloudy from '../../assets/icons/weather/partly_cloudy.svg';
-import Rain from '../../assets/icons/weather/rain.svg';
-import Snow from '../../assets/icons/weather/snow.svg';
-import ClearDay from '../../assets/icons/weather/clear_day.svg';
-import ClearNight from '../../assets/icons/weather/clear_night.svg';
-import Thunder from '../../assets/icons/weather/thunder.svg';
-import { h } from 'vue';
+import Cloudy from '../../assets/icons/weather/cloudy.svg?component';
+import Fog from '../../assets/icons/weather/fog.svg?component';
+import PartlyCloudy from '../../assets/icons/weather/partly_cloudy.svg?component';
+import Rain from '../../assets/icons/weather/rain.svg?component';
+import Snow from '../../assets/icons/weather/snow.svg?component';
+import ClearDay from '../../assets/icons/weather/clear_day.svg?component';
+import ClearNight from '../../assets/icons/weather/clear_night.svg?component';
+import Thunder from '../../assets/icons/weather/thunder.svg?component';
+import { defineComponent, h } from 'vue';
 
 // @vue/component
-export default {
+export default defineComponent({
   name: 'WeatherIcon',
 
   props: {
@@ -43,4 +43,4 @@ export default {
         return h(Cloudy);
     }
   },
-};
+});

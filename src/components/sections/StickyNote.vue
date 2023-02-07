@@ -8,25 +8,24 @@
     </div>
   </div>
 </template>
-<script setup>
-import CloseIcon from '../../assets/icons/close.svg';
-import { defineProps } from 'vue';
+<script setup lang="ts">
+import CloseIcon from '../../assets/icons/close.svg?component';
 
-const props = defineProps({
-  note: {
-    type: Object,
-    required: true,
-  },
-});
+const props = defineProps<{
+  note: any;
+}>();
 
-const emit = defineEmits(['delete', 'update']);
+const emit = defineEmits<{
+  (e: 'delete', id: number): void;
+  (e: 'update', { noteId, text }: { noteId: number; text: string }): void;
+}>();
 
 const deleteNote = () => {
   emit('delete', props.note.id);
 };
 
-const updateNote = (e) => {
-  const newText = e.target.value;
+const updateNote = (e: Event) => {
+  const newText = (e.target as HTMLTextAreaElement).value;
   emit('update', { noteId: props.note.id, text: newText });
 };
 </script>

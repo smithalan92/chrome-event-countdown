@@ -12,25 +12,19 @@
     <span class="font-bold py-[2px] px-3 text-center text-sm"> in {{ eventCity.name }}, {{ eventCountry.name }} </span>
   </div>
 </template>
-<script setup>
+<script setup lang="ts">
 import moment from 'moment-timezone';
-import { getWeatherForCity } from '../../api';
+import { getWeatherForCity } from '../../api/api';
 import WeatherIcon from '../widgets/WeatherIcon';
-import { defineProps, ref, watch, onMounted } from 'vue';
+import { ref, watch, onMounted } from 'vue';
+import type { GetWeatherForCityResponse, Country, City } from '@/api/api.types';
 
-const props = defineProps({
-  eventCountry: {
-    type: Object,
-    required: true,
-  },
+const props = defineProps<{
+  eventCountry: Country;
+  eventCity: City;
+}>();
 
-  eventCity: {
-    type: Object,
-    required: true,
-  },
-});
-
-const weather = ref(null);
+const weather = ref<GetWeatherForCityResponse | null>(null);
 const localTime = ref('');
 
 const getCurrentWeather = async () => {

@@ -19,19 +19,19 @@
     <global-events @keydown.esc="close" />
   </div>
 </template>
-<script setup>
+<script setup lang="ts">
 import { ref, nextTick } from 'vue';
 import { GlobalEvents } from 'vue-global-events';
-import CloseIcon from '../../assets/icons/close.svg';
+import CloseIcon from '../../assets/icons/close.svg?component';
 
-const props = defineProps({
-  title: {
-    type: String,
-    required: true,
-  },
-});
+const props = defineProps<{
+  title: string;
+}>();
 
-const emit = defineEmits(['open', 'close']);
+const emit = defineEmits<{
+  (e: 'open'): void;
+  (e: 'close'): void;
+}>();
 
 const isVisible = ref(false);
 const isOverlayVisible = ref(false);

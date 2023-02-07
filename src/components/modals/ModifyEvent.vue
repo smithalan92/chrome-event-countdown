@@ -66,31 +66,33 @@
     </template>
   </ModalBase>
 </template>
-<script setup>
-/* eslint-disable func-names */
+<script setup lang="ts">
+// @ts-expect-error
 import vSelect from 'vue-select';
-import throttle from 'lodash/throttle';
+import { throttle } from 'lodash';
 import Datepicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css';
 import 'vue-select/dist/vue-select.css';
 import ModalBase from './ModalBase.vue';
 import { ref, onMounted, watch, computed } from 'vue';
-import { useAppStore } from '../../store';
-import { getCountries, getCitiesForCountry } from '../../api';
+import { useAppStore } from '../../store/app';
+import { getCountries, getCitiesForCountry } from '../../api/api';
+import type { City, Country } from '@/api/api.types';
+import type { AxiosError } from 'axios';
 
-let abortController = null;
+let abortController: AbortController | null = null;
 const store = useAppStore();
-const modal = ref(null);
-const nameRef = ref(null);
+const modal = ref<typeof ModalBase | null>(null);
+const nameRef = ref<HTMLInputElement | null>(null);
 
-const eventId = ref(null);
+const eventId = ref<number | null>(null);
 const eventName = ref('');
 const eventDate = ref(new Date().toISOString());
 const eventBackgroundImage = ref('');
-const countries = ref([]);
-const cities = ref([]);
-const selectedCountry = ref(null);
-const selectedCity = ref(null);
+const countries = ref<Country[]>([]);
+const cities = ref<City[]>([]);
+const selectedCountry = ref<Country | null>(null);
+const selectedCity = ref<City | null>(null);
 
 const mode = computed(() => {
   if (eventId.value) return 'edit';
@@ -119,17 +121,17 @@ onMounted(() => {
   loadCountries();
   store.$onAction(({ name, args }) => {
     if (name === 'openAddEventModal') {
-      const data = args[0];
-      if (data) {
-        eventId.value = data.eventId;
-        eventName.value = data.eventName;
-        eventDate.value = data.eventDate;
-        selectedCountry.value = data.eventCountry;
-        selectedCity.value = data.eventCity;
-        eventBackgroundImage.value = data.eventBackgroundImage;
+      const event = args[0];
+      if (event) {
+        eventId.value = event.id;
+        eventName.value = event.name;
+        eventDate.value = event.eventDate.toISOString();
+        selectedCountry.value = event.country;
+        selectedCity.value = event.city;
+        eventBackgroundImage.value = event.background;
       }
 
-      modal.value.open();
+      modal.value!.open();
     }
   });
 });
@@ -185,10 +187,10 @@ const onClickAdd = async () => {
     name: eventName.value,
     date: eventDate.value,
     background: eventBackgroundImage.value,
-    cityId: selectedCity.value.id,
+    cityId: selectedCity.value!.id,
   });
 
-  modal.value.close();
+  modal.value!.close();
 };
 
 const onClickEdit = async () => {
@@ -198,18 +200,18 @@ const onClickEdit = async () => {
   }
 
   await store.updateEvent({
-    eventId: eventId.value,
+    eventId: eventId.value!,
     name: eventName.value,
     date: eventDate.value,
     background: eventBackgroundImage.value,
-    cityId: selectedCity.value.id,
+    cityId: selectedCity.value!.id,
   });
 
-  modal.value.close();
+  modal.value!.close();
 };
 
 const onClickCancel = () => {
-  modal.value.close();
+  modal.value!.close();
 };
 
 const loadCountries = async () => {
@@ -229,7 +231,7 @@ const throttledLoadCities = throttle(
       loading(true);
 
       const data = await getCitiesForCountry({
-        countryId: selectedCountry.value.id,
+        countryId: selectedCountry.value!.id,
         searchTerm: search,
         signal: abortController.signal,
       });
@@ -237,7 +239,7 @@ const throttledLoadCities = throttle(
       cities.value = data.cities;
       loading(false);
     } catch (error) {
-      if (error?.name === 'CanceledError') return;
+      if ((error as AxiosError)?.name === 'CanceledError') return;
       loading(false);
       console.error(error);
     }
@@ -246,7 +248,7 @@ const throttledLoadCities = throttle(
   { leading: false, trailing: true },
 );
 
-const loadCities = (search, loading) => {
+const loadCities = (search: string, loading: boolean) => {
   if (!selectedCountry.value) return;
 
   throttledLoadCities(loading, search);

@@ -12,17 +12,17 @@
     </button>
   </div>
 </template>
-<script setup>
+<script setup lang="ts">
 import EventList from './sections/EventList.vue';
 import ModifyEvent from './modals/ModifyEvent.vue';
 import BlankSlate from './sections/EventListBlankSlate.vue';
 import AddPopover from './widgets/AddPopover.vue';
 import AddStickyNote from './modals/AddStickyNote.vue';
 import StickyNotes from './sections/StickyNotes.vue';
-import SettingsIcon from '../assets/icons/settings.svg';
+import SettingsIcon from '../assets/icons/settings.svg?component';
 import SettingsModal from './modals/Settings.vue';
 import { computed } from 'vue';
-import { useAppStore } from '../store';
+import { useAppStore } from '../store/app';
 
 const store = useAppStore();
 

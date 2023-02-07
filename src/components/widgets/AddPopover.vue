@@ -21,10 +21,10 @@
     </div>
   </div>
 </template>
-<script setup>
-import PlusIcon from '../../assets/icons/plus.svg';
+<script setup lang="ts">
+import PlusIcon from '../../assets/icons/plus.svg?component';
 import { ref } from 'vue';
-import { useAppStore } from '../../store';
+import { useAppStore } from '../../store/app';
 
 const store = useAppStore();
 

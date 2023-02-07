@@ -1,5 +1,6 @@
 import { createApp } from 'vue';
 import { createPinia } from 'pinia';
+// @ts-expect-error missing types
 import vClickOutside from 'v-click-outside';
 import App from './components/App.vue';
 

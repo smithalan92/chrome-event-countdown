@@ -6,19 +6,19 @@
     </template>
   </ModalBase>
 </template>
-<script setup>
+<script setup lang="ts">
 import { ref, onMounted } from 'vue';
-import { useAppStore } from '../../store';
+import { useAppStore } from '../../store/app';
 import Login from '../sections/Login.vue';
 import ModalBase from './ModalBase.vue';
 
-const modalRef = ref(null);
+const modalRef = ref<typeof ModalBase | null>(null);
 const store = useAppStore();
 
 onMounted(() => {
   store.$onAction(({ name }) => {
     if (name === 'openSettingsModal') {
-      modalRef.value.open();
+      modalRef.value!.open();
     }
   });
 });

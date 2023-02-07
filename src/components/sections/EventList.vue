@@ -3,25 +3,19 @@
     <div v-if="isReorderingEvents" class="absolute top-0 left-0 z-10 flex justify-center items-center w-screen h-screen bg-black/40">
       <Spinner class="w-24 h-24 fill-white animate-spin" />
     </div>
-    <dragable v-model="events" item-key="id" group="events" class="flex flex-1" @start="drag = true" @end="drag = false">
+    <dragable v-model="events" item-key="id" group="events" class="flex flex-1">
       <template #item="{ element }">
-        <event
-          :event-id="element.id"
-          :event-name="element.name"
-          :event-date="element.eventDate"
-          :event-country="element.country"
-          :event-city="element.city"
-          :background="element.background" />
+        <event :event="element" />
       </template>
     </dragable>
   </div>
 </template>
-<script setup>
+<script setup lang="ts">
 import Event from './Event.vue';
 import Dragable from 'vuedraggable';
 import { computed } from 'vue';
-import { useAppStore } from '../../store';
-import Spinner from '../../assets/icons/spinner.svg';
+import { useAppStore } from '../../store/app';
+import Spinner from '../../assets/icons/spinner.svg?component';
 
 const store = useAppStore();
 
