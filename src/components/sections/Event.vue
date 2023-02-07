@@ -13,7 +13,9 @@
             <trash-icon class="fill-white w-4 h-4" />
           </div>
         </div>
-        <div class="text-[40px] font-bold mb-1 overflow-hidden">{{ event.name }}</div>
+        <div class="text-center text-[40px] font-bold mb-1 overflow-hidden whitespace-nowrap text-ellipsis w-full">
+          {{ event.name }}
+        </div>
         <countdown v-if="!hasEventPassed" :time="countdownDate" :emit-events="true" @progress="calculateCountdownProgress">
           <div class="flex flex-col items-center justify-center">
             <div class="text-2xl mr-1 text-center">{{ weekString }}</div>
