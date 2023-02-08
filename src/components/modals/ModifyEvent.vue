@@ -1,12 +1,12 @@
 <template>
   <ModalBase ref="modal" :title="modalTitle" @open="onModalOpen" @close="onModalClose">
     <template #body>
-      <div class="flex items-center mb-2">
-        <span class="min-w-[120px] select-none">Event Country</span>
+      <div class="flex flex-col mb-2">
+        <span class="min-w-[120px] select-none mb-2 font-semibold">Event Country</span>
         <v-select v-model="selectedCountry" :options="countries" placeholder="Select a country" label="name" class="flex-1"></v-select>
       </div>
-      <div class="flex items-center mb-2">
-        <span class="min-w-[120px] select-none">Event City</span>
+      <div class="flex flex-col mb-2">
+        <span class="min-w-[120px] select-none mb-2 font-semibold">Event City</span>
         <v-select
           v-model="selectedCity"
           :disabled="!selectedCountry"
@@ -22,31 +22,31 @@
           </template>
         </v-select>
       </div>
-      <div class="flex items-center mb-2">
-        <span class="min-w-[120px] select-none">Event Name</span>
+      <div class="flex flex-col mb-2">
+        <span class="min-w-[120px] select-none mb-2 font-semibold">Event Name</span>
         <input
           ref="nameRef"
           v-model="eventName"
           placeholder="Your event name"
-          class="flex-1 p-1 rounded border border-solid border-gray-200 outline-none h-9"
+          class="flex-1 p-2 rounded border border-solid border-gray-200 outline-none h-9"
           type="text" />
       </div>
-      <div class="flex items-center mb-2">
-        <span class="min-w-[120px] select-none">Event Date</span>
-        <Datepicker v-model="eventDate" />
+      <div class="flex flex-col mb-2">
+        <span class="min-w-[120px] select-none mb-2 font-semibold">Event Date</span>
+        <Datepicker v-model="eventDate" format="dd MMM yyyy HH:mm" />
       </div>
-      <div class="flex items-center mb-2">
-        <span class="min-w-[120px] select-none">Image</span>
+      <div class="flex flex-col mb-2">
+        <span class="min-w-[120px] select-none mb-2 font-semibold">Image</span>
         <div class="flex flex-col flex-1">
           <input v-model="eventBackgroundImage" class="p-1 rounded border border-solid border-gray-200 outline-none h-9" type="url" />
           <span class="mt-1 text-[12px]"> Paste a URL to an image here. If empty, a random image will be used. </span>
         </div>
       </div>
       <transition name="zoom">
-        <div class="flex flex-1 justify-center items-center p-5">
+        <div class="flex flex-1 justify-center items-center p-2">
           <div
             v-if="!eventBackgroundImage"
-            class="flex items-center justify-center h-[120px] w-[212px] border border-dashed border-grey-300">
+            class="flex items-center justify-center h-[120px] w-[212px] border border-dashed border-gray-300">
             <span class="text-sm text-gray-400 select-none">Your image here</span>
           </div>
           <img class="h-[120px]" :src="eventBackgroundImage" />
@@ -82,6 +82,7 @@ import { useGeoStore } from '@/store/geo';
 import type { City, Country } from '@/api/api.types';
 import type { AxiosError } from 'axios';
 import { storeToRefs } from 'pinia';
+import { enIE } from 'date-fns/locale';
 
 const eventStore = useEventStore();
 
