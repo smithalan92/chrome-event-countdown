@@ -1,14 +1,16 @@
 <template>
   <div class="flex flex-col h-screen p-0 m-0 overflow-hidden">
-    <event-list v-if="hasEvents" />
-    <blank-slate v-else />
+    <EventList v-if="hasEvents" />
+    <BlankSlate v-else />
     <StickyNotes />
     <AddPopover />
-    <modify-event />
-    <add-sticky-note />
-    <settings-modal />
+    <ModifyEvent />
+    <AddStickyNote />
+    <AccountModal />
     <button class="absolute top-[10px] right-[10px] hover:opacity-70 cursor-pointer" @click="onClickSettings">
-      <SettingsIcon class="w-8 h-8 fill-white" />
+      <div class="w-12 h-12 rounded-full border-4 border-sold border-white flex justify-center items-center">
+        <UserIcon class="w-6 h-6 fill-white" />
+      </div>
     </button>
   </div>
 </template>
@@ -19,8 +21,8 @@ import BlankSlate from './sections/EventListBlankSlate.vue';
 import AddPopover from './widgets/AddPopover.vue';
 import AddStickyNote from './modals/AddStickyNote.vue';
 import StickyNotes from './sections/StickyNotes.vue';
-import SettingsIcon from '../assets/icons/settings.svg?component';
-import SettingsModal from './modals/Settings.vue';
+import UserIcon from '../assets/icons/user.svg?component';
+import AccountModal from './modals/Account.vue';
 import { computed } from 'vue';
 import { useAppStore } from '../store/app';
 import { useEventStore } from '@/store/events';
