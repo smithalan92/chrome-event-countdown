@@ -3,22 +3,24 @@
     <template #body>
       <div class="flex items-center mb-2">
         <span class="min-w-[120px] select-none">Event Country</span>
-        <v-select
-          v-model="selectedCountry"
-          :options="countries"
-          placeholder="Type to search countries"
-          label="name"
-          class="flex-1"></v-select>
+        <v-select v-model="selectedCountry" :options="countries" placeholder="Select a country" label="name" class="flex-1"></v-select>
       </div>
-      <div v-if="selectedCountry" class="flex items-center mb-2">
+      <div class="flex items-center mb-2">
         <span class="min-w-[120px] select-none">Event City</span>
         <v-select
           v-model="selectedCity"
+          :disabled="!selectedCountry"
           :options="cities"
-          placeholder="Type to search cities"
+          placeholder="Select a city"
           label="name"
           class="flex-1"
-          @search="loadCities"></v-select>
+          @search="searchCities"
+          :loading="isLoadingCities">
+          <template #no-options>
+            <template v-if="isLoadingCities"> Loading... </template>
+            <template v-else> No results found </template>
+          </template>
+        </v-select>
       </div>
       <div class="flex items-center mb-2">
         <span class="min-w-[120px] select-none">Event Name</span>
@@ -37,7 +39,7 @@
         <span class="min-w-[120px] select-none">Image</span>
         <div class="flex flex-col flex-1">
           <input v-model="eventBackgroundImage" class="p-1 rounded border border-solid border-gray-200 outline-none h-9" type="url" />
-          <span class="mt-1 text-[8px]"> Paste a URL to an image here. If empty, a random image will be used. </span>
+          <span class="mt-1 text-[12px]"> Paste a URL to an image here. If empty, a random image will be used. </span>
         </div>
       </div>
       <transition name="zoom">
@@ -69,19 +71,23 @@
 <script setup lang="ts">
 // @ts-expect-error
 import vSelect from 'vue-select';
-import { throttle } from 'lodash';
+import { debounce } from 'lodash';
 import Datepicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css';
 import 'vue-select/dist/vue-select.css';
 import ModalBase from './ModalBase.vue';
 import { ref, onMounted, watch, computed } from 'vue';
 import { useEventStore } from '@/store/events';
-import { getCountries, getCitiesForCountry } from '../../api/api';
+import { useGeoStore } from '@/store/geo';
 import type { City, Country } from '@/api/api.types';
 import type { AxiosError } from 'axios';
+import { storeToRefs } from 'pinia';
 
-let abortController: AbortController | null = null;
 const eventStore = useEventStore();
+
+const geoStore = useGeoStore();
+const { countries, cities, isLoadingCities } = storeToRefs(geoStore);
+
 const modal = ref<typeof ModalBase | null>(null);
 const nameRef = ref<HTMLInputElement | null>(null);
 
@@ -89,8 +95,6 @@ const eventId = ref<number | null>(null);
 const eventName = ref('');
 const eventDate = ref(new Date().toISOString());
 const eventBackgroundImage = ref('');
-const countries = ref<Country[]>([]);
-const cities = ref<City[]>([]);
 const selectedCountry = ref<Country | null>(null);
 const selectedCity = ref<City | null>(null);
 
@@ -108,17 +112,15 @@ const isSaveButtonDisabled = computed(() => {
   return eventName.value.trim() === '' || eventDate.value === '' || !selectedCountry.value || !selectedCity.value;
 });
 
-watch(
-  () => selectedCountry.value?.id,
-  (newId, oldId) => {
-    if (oldId === null && selectedCity.value) return;
-    if (newId !== oldId && oldId !== undefined) selectedCity.value = null;
-    cities.value = [];
-  },
-);
+watch(selectedCountry, (newVal, oldVal) => {
+  if (oldVal === null && selectedCity.value) return;
+  if (newVal?.id !== oldVal?.id && oldVal?.id !== undefined) selectedCity.value = null;
+  if (newVal?.id) {
+    geoStore.loadCitiesForCountry({ countryId: newVal!.id, searchTerm: '' });
+  }
+});
 
 onMounted(() => {
-  loadCountries();
   eventStore.$onAction(({ name, args }) => {
     if (name === 'openAddEventModal') {
       const event = args[0];
@@ -214,43 +216,24 @@ const onClickCancel = () => {
   modal.value!.close();
 };
 
-const loadCountries = async () => {
-  const data = await getCountries();
-  countries.value = data.countries;
-};
-
-const throttledLoadCities = throttle(
-  async (loading, search) => {
+const throttledLoadCities = debounce(
+  async (search) => {
     try {
-      abortController?.abort();
-      abortController = new AbortController();
-      if (!search) {
-        cities.value = [];
-        return;
-      }
-      loading(true);
-
-      const data = await getCitiesForCountry({
+      await geoStore.loadCitiesForCountry({
         countryId: selectedCountry.value!.id,
         searchTerm: search,
-        signal: abortController.signal,
       });
-
-      cities.value = data.cities;
-      loading(false);
     } catch (error) {
       if ((error as AxiosError)?.name === 'CanceledError') return;
-      loading(false);
       console.error(error);
     }
   },
-  200,
-  { leading: false, trailing: true },
+  500,
+  { trailing: true },
 );
 
-const loadCities = (search: string, loading: boolean) => {
+const searchCities = (search: string) => {
   if (!selectedCountry.value) return;
-
-  throttledLoadCities(loading, search);
+  throttledLoadCities(search);
 };
 </script>

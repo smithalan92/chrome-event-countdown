@@ -5,14 +5,17 @@ import { get, set } from '../utils/storage';
 import { computed } from 'vue';
 import { useNoteStore } from './notes';
 import { useEventStore } from './events';
-import type { Event, Note } from '../api/api.types';
 import type { AppUser } from './app.types';
+import { useGeoStore } from './geo';
 
 export const useAppStore = defineStore('app', () => {
   const noteStore = useNoteStore();
   const eventStore = useEventStore();
+  const geoStore = useGeoStore();
 
   const user = ref<AppUser | null>(null);
+
+  const isLoggedIn = computed(() => user.value !== null);
 
   const syncState = () => {
     set('user', user.value);
@@ -36,6 +39,7 @@ export const useAppStore = defineStore('app', () => {
   };
 
   const loadAppData = async () => {
+    geoStore.loadCountries();
     if (!user.value) return;
     noteStore.loadNotes();
     eventStore.loadEvents();
@@ -51,6 +55,7 @@ export const useAppStore = defineStore('app', () => {
 
   return {
     user,
+    isLoggedIn,
     syncState,
     restoreState,
     login,

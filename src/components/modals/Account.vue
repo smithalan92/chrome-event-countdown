@@ -21,23 +21,17 @@
   </ModalBase>
 </template>
 <script setup lang="ts">
+import { storeToRefs } from 'pinia';
 import { ref, onMounted, computed } from 'vue';
 import { useAppStore } from '../../store/app';
 import ModalBase from './ModalBase.vue';
 
 const modalRef = ref<typeof ModalBase | null>(null);
 const store = useAppStore();
+const { isLoggedIn, user } = storeToRefs(store);
 
 const email = ref('');
 const password = ref('');
-
-const user = computed(() => {
-  return store.user;
-});
-
-const isLoggedIn = computed(() => {
-  return user.value !== null;
-});
 
 const canLogin = computed(() => {
   return email.value.trim().length > 0 && password.value.trim().length > 0;

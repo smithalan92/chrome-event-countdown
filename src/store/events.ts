@@ -32,7 +32,13 @@ export const useEventStore = defineStore('events', () => {
   };
 
   const addEvent = async ({ name, date, background, cityId }: { name: string; date: string; background: string; cityId: number }) => {
-    const event = await api.addEvent({ name, date, background, cityId }, { authToken: appStore.user?.token });
+    let event: Event;
+    if (appStore.isLoggedIn) {
+      event = await api.addEvent({ name, date, background, cityId }, { authToken: appStore.user?.token });
+    } else {
+      event = {} as any;
+    }
+
     events.value.push(event);
     set('events', events.value);
   };
