@@ -1,7 +1,5 @@
 <template>
-  <div
-    v-if="weather"
-    class="flex flex-col items-center absolute top-[100%] r-[calc(50%-100px)] w-52 pb-10 pt-4 bg-black/40 rounded-b-[30%]">
+  <div v-if="weather" class="flex flex-col items-center w-52 pb-10 pt-4 bg-black/40 rounded-b-[30%]">
     <div class="w-full h-16 mb-2 flex items-center justify-center">
       <weather-icon class="my-2 w-12" :icon="weather.icon" :is-day="weather.isDay" />
     </div>
