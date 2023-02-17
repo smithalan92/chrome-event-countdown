@@ -95,7 +95,8 @@ export const useEventStore = defineStore('events', () => {
   };
 
   // Modal open helpers - TODO replace
-  const openAddEventModal = (_event?: Event) => {};
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const openAddEventModal = (__event?: Event) => {};
 
   return {
     events,

@@ -3,3 +3,6 @@ dist/
 extension/
 .prettierrc.js
 .eslintrc.js
+prettier.config.js
+postcss.config.js
+tailwind.config.js

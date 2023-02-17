@@ -8,13 +8,14 @@
     "dev": "vite",
     "type-check": "vue-tsc --noEmit",
     "preview": "vite preview",
-    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore"
+    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts"
   },
   "pre-commit": [
     "type-check",
     "lint"
   ],
   "dependencies": {
+    "@vue/eslint-config-prettier": "^7.0.0",
     "axios": "^1.2.6",
     "date-fns": "^2.29.3",
     "lodash": "^4.17.21",
