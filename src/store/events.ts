@@ -1,7 +1,6 @@
 import { ref } from 'vue';
 import { defineStore } from 'pinia';
 import * as api from '../api/api';
-import { get, set } from '../utils/storage';
 import { computed } from 'vue';
 import { useAppStore } from './app';
 import type { Event } from '../api/api.types';
@@ -21,14 +20,8 @@ export const useEventStore = defineStore('events', () => {
 
   const isReorderingEvents = ref(false);
 
-  const restoreEvents = async () => {
-    const _events = await get<Event[] | null>('events');
-
-    _events?.forEach((event) => {
-      event.eventDate = new Date(event.eventDate);
-    });
-
-    events.value = _events ?? [];
+  const resetEvents = () => {
+    events.value = [];
   };
 
   const addEvent = async ({ name, date, background, cityId }: { name: string; date: string; background: string; cityId: number }) => {
@@ -40,14 +33,12 @@ export const useEventStore = defineStore('events', () => {
     }
 
     events.value.push(event);
-    set('events', events.value);
   };
 
   const removeEvent = async (eventId: number) => {
     await api.deleteEvent({ eventId }, { authToken: appStore.user?.token });
     const index = events.value.findIndex((event) => event.id === eventId);
     events.value.splice(index, 1);
-    set('events', events.value);
   };
 
   const updateEvent = async ({
@@ -66,7 +57,6 @@ export const useEventStore = defineStore('events', () => {
     const event = await api.updateEvent({ eventId, name, date, background, cityId }, { authToken: appStore.user?.token });
     const eventIndex = events.value.findIndex((e) => e.id === event.id);
     events.value.splice(eventIndex, 1, event);
-    set('events', events.value);
   };
 
   const reorderEvents = async (newlyOrderedEvents: Event[]) => {
@@ -85,7 +75,6 @@ export const useEventStore = defineStore('events', () => {
       });
 
       events.value = _events;
-      set('events', _events);
     } catch (e) {
       events.value = originalEventOrder;
     } finally {
@@ -101,7 +90,6 @@ export const useEventStore = defineStore('events', () => {
     });
 
     events.value = _events;
-    set('events', _events);
   };
 
   // Modal open helpers - TODO replace
@@ -110,8 +98,8 @@ export const useEventStore = defineStore('events', () => {
   return {
     events,
     sortedEvents,
+    resetEvents,
     isReorderingEvents,
-    restoreEvents,
     loadEvents,
     reorderEvents,
     addEvent,

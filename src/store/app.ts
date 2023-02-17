@@ -24,8 +24,6 @@ export const useAppStore = defineStore('app', () => {
   const restoreState = async () => {
     const _user = await get<AppUser | null>('user');
     user.value = _user;
-
-    eventStore.restoreEvents();
   };
 
   const login = async ({ email, password }: { email: string; password: string }) => {
@@ -36,6 +34,16 @@ export const useAppStore = defineStore('app', () => {
       email: _user.email,
       token: token,
     };
+
+    syncState();
+
+    Promise.all([eventStore.loadEvents(), noteStore.loadNotes()]);
+  };
+
+  const logout = () => {
+    user.value = null;
+    syncState();
+    eventStore.resetEvents();
   };
 
   const loadAppData = async () => {
@@ -59,6 +67,7 @@ export const useAppStore = defineStore('app', () => {
     syncState,
     restoreState,
     login,
+    logout,
     loadAppData,
     startApp,
     openSettingsModal,

@@ -2,7 +2,6 @@ import { ref } from 'vue';
 import { defineStore } from 'pinia';
 import { useAppStore } from './app';
 import * as api from '../api/api';
-import { get, set } from '../utils/storage';
 import type { Note } from '../api/api.types';
 
 export const useNoteStore = defineStore('notes', () => {
@@ -32,6 +31,10 @@ export const useNoteStore = defineStore('notes', () => {
     notes.value.splice(index, 1);
   };
 
+  const resetNotes = () => {
+    notes.value = [];
+  };
+
   // Modal open helpers - TODO replace
   const openAddStickyNoteModal = () => {};
 
@@ -41,6 +44,7 @@ export const useNoteStore = defineStore('notes', () => {
     addNote,
     updateNote,
     removeNote,
+    resetNotes,
     openAddStickyNoteModal,
   };
 });

@@ -15,7 +15,14 @@
             Login
           </button>
         </template>
-        <template v-else> Logged in as {{ user?.email }} </template>
+        <template v-else>
+          <div class="flex flex-col">
+            <span>
+              Logged in as <span class="font-bold">{{ user?.email }}</span>
+            </span>
+            <button class="mt-8 border border-solid border-gray-400 rounded p-2 hover:bg-gray-100" @click="onClickLogout">Logout</button>
+          </div>
+        </template>
       </div>
     </template>
   </ModalBase>
@@ -42,9 +49,15 @@ const onClickLogin = () => {
   store.login({ email: email.value, password: password.value });
 };
 
+const onClickLogout = () => {
+  store.logout();
+};
+
 onMounted(() => {
   store.$onAction(({ name }) => {
     if (name === 'openSettingsModal') {
+      email.value = '';
+      password.value = '';
       modalRef.value!.open();
     }
   });

@@ -33,7 +33,21 @@
       </div>
       <div class="flex flex-col mb-2">
         <span class="min-w-[120px] select-none mb-2 font-semibold">Event Date</span>
-        <Datepicker v-model="eventDate" format="dd MMM yyyy HH:mm" />
+        <DatePicker
+          class="flex-1"
+          v-model="eventDate"
+          mode="dateTime"
+          :is24hr="true"
+          :is-required="true"
+          :popover="{ visibility: 'focus' }">
+          <template v-slot="{ inputValue, inputEvents }">
+            <input
+              class="w-full p-2 rounded border border-solid border-gray-200 outline-none h-9"
+              :value="inputValue"
+              readonly
+              v-on="inputEvents" />
+          </template>
+        </DatePicker>
       </div>
       <div class="flex flex-col mb-2">
         <span class="min-w-[120px] select-none mb-2 font-semibold">Image</span>
@@ -72,8 +86,6 @@
 // @ts-expect-error
 import vSelect from 'vue-select';
 import { debounce } from 'lodash';
-import Datepicker from '@vuepic/vue-datepicker';
-import '@vuepic/vue-datepicker/dist/main.css';
 import 'vue-select/dist/vue-select.css';
 import ModalBase from './ModalBase.vue';
 import { ref, onMounted, watch, computed } from 'vue';
@@ -82,7 +94,9 @@ import { useGeoStore } from '@/store/geo';
 import type { City, Country } from '@/api/api.types';
 import type { AxiosError } from 'axios';
 import { storeToRefs } from 'pinia';
-import { enIE } from 'date-fns/locale';
+import { DatePicker } from 'v-calendar';
+
+import 'v-calendar/dist/style.css';
 
 const eventStore = useEventStore();
 
@@ -94,7 +108,7 @@ const nameRef = ref<HTMLInputElement | null>(null);
 
 const eventId = ref<number | null>(null);
 const eventName = ref('');
-const eventDate = ref(new Date().toISOString());
+const eventDate = ref(new Date());
 const eventBackgroundImage = ref('');
 const selectedCountry = ref<Country | null>(null);
 const selectedCity = ref<City | null>(null);
@@ -110,7 +124,7 @@ const modalTitle = computed(() => {
 });
 
 const isSaveButtonDisabled = computed(() => {
-  return eventName.value.trim() === '' || eventDate.value === '' || !selectedCountry.value || !selectedCity.value;
+  return eventName.value.trim() === '' || !eventDate.value || !selectedCountry.value || !selectedCity.value;
 });
 
 watch(selectedCountry, (newVal, oldVal) => {
@@ -146,7 +160,6 @@ const onModalOpen = () => {
 const onModalClose = () => {
   eventId.value = null;
   eventName.value = '';
-  eventDate.value = '';
   eventBackgroundImage.value = '';
   selectedCountry.value = null;
   selectedCity.value = null;
@@ -162,7 +175,7 @@ const onClickConfirm = () => {
 
 const validateInput = () => {
   if (eventName.value === '') return false;
-  if (eventDate.value === '') return false;
+  if (!eventDate.value) return false;
   if (selectedCountry.value && !selectedCity.value) return false;
 
   if (
@@ -188,7 +201,7 @@ const onClickAdd = async () => {
 
   await eventStore.addEvent({
     name: eventName.value,
-    date: eventDate.value,
+    date: eventDate.value.toISOString(),
     background: eventBackgroundImage.value,
     cityId: selectedCity.value!.id,
   });
