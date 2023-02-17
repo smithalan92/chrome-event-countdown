@@ -142,7 +142,7 @@ onMounted(() => {
       if (event) {
         eventId.value = event.id;
         eventName.value = event.name;
-        eventDate.value = event.eventDate.toISOString();
+        eventDate.value = event.eventDate;
         selectedCountry.value = event.country;
         selectedCity.value = event.city;
         eventBackgroundImage.value = event.background;

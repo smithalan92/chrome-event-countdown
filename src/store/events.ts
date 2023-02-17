@@ -4,6 +4,7 @@ import * as api from '../api/api';
 import { computed } from 'vue';
 import { useAppStore } from './app';
 import type { Event } from '../api/api.types';
+import { format } from 'date-fns';
 
 export const useEventStore = defineStore('events', () => {
   const appStore = useAppStore();
@@ -50,11 +51,12 @@ export const useEventStore = defineStore('events', () => {
   }: {
     eventId: number;
     name: string;
-    date: string;
+    date: Date;
     background: string;
     cityId: number;
   }) => {
-    const event = await api.updateEvent({ eventId, name, date, background, cityId }, { authToken: appStore.user?.token });
+    const eventDate = format(date, 'yyyy-MM-dd HH:mm:00');
+    const event = await api.updateEvent({ eventId, name, date: eventDate, background, cityId }, { authToken: appStore.user?.token });
     const eventIndex = events.value.findIndex((e) => e.id === event.id);
     events.value.splice(eventIndex, 1, event);
   };
