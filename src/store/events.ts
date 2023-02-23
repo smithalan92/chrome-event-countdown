@@ -3,9 +3,13 @@ import { defineStore } from 'pinia';
 import * as api from '../api/api';
 import { computed } from 'vue';
 import { useAppStore } from './app';
-import type { Event } from '../api/api.types';
+import type { City, Country, Event } from '../api/api.types';
 import { format } from 'date-fns';
 import { useGeoStore } from './geo';
+import { getRandomNumber } from '@/utils/number';
+import { set, get } from '@/utils/storage';
+
+const STORAGE_KEY = 'events_v1';
 
 export const useEventStore = defineStore('events', () => {
   const appStore = useAppStore();
@@ -23,36 +27,44 @@ export const useEventStore = defineStore('events', () => {
 
   const isReorderingEvents = ref(false);
 
+  const syncToStorage = () => {
+    set(STORAGE_KEY, events.value);
+  };
+
+  const syncFromStorage = async () => {
+    const _events = await get<Event[]>(STORAGE_KEY);
+    if (_events) {
+      _events.forEach((event) => {
+        event.eventDate = new Date(event.eventDate);
+      });
+      events.value = _events;
+    }
+  };
+
   const resetEvents = () => {
     events.value = [];
+    syncToStorage();
   };
 
   const addEvent = async ({
     name,
     date,
     background,
-    countryId,
-    cityId,
+    country,
+    city,
   }: {
     name: string;
     date: string;
     background: string;
-    countryId: number;
-    cityId: number;
+    country: Country;
+    city: City;
   }) => {
     let event: Event;
     if (appStore.isLoggedIn) {
-      event = await api.addEvent({ name, date, background, cityId }, { authToken: appStore.user?.token });
+      event = await api.addEvent({ name, date, background, cityId: city.id }, { authToken: appStore.user?.token });
     } else {
-      const country = geoStore.getCountryById(countryId);
-      if (!country) throw new Error(`Unable to find country: ${countryId}`);
-      const city = geoStore.getCityById(cityId);
-      if (!city) throw new Error(`Unable to find city: ${cityId}`);
-      const randomIds = new Uint32Array(1);
-      crypto.getRandomValues(randomIds);
-
       event = {
-        id: randomIds[0],
+        id: getRandomNumber(),
         name,
         eventDate: new Date(date),
         order: events.value.length + 1,
@@ -63,6 +75,7 @@ export const useEventStore = defineStore('events', () => {
     }
 
     events.value.push(event);
+    syncToStorage();
   };
 
   const removeEvent = async (eventId: number) => {
@@ -71,6 +84,7 @@ export const useEventStore = defineStore('events', () => {
     }
     const index = events.value.findIndex((event) => event.id === eventId);
     events.value.splice(index, 1);
+    syncToStorage();
   };
 
   const updateEvent = async ({
@@ -78,26 +92,21 @@ export const useEventStore = defineStore('events', () => {
     name,
     date,
     background,
-    countryId,
-    cityId,
+    country,
+    city,
   }: {
     eventId: number;
     name: string;
     date: Date;
     background: string;
-    countryId: number;
-    cityId: number;
+    country: Country;
+    city: City;
   }) => {
     let event: Event;
     if (appStore.isLoggedIn) {
       const eventDate = format(date, 'yyyy-MM-dd HH:mm:00');
-      event = await api.updateEvent({ eventId, name, date: eventDate, background, cityId }, { authToken: appStore.user?.token });
+      event = await api.updateEvent({ eventId, name, date: eventDate, background, cityId: city.id }, { authToken: appStore.user?.token });
     } else {
-      const country = geoStore.getCountryById(countryId);
-      if (!country) throw new Error(`Unable to find country: ${countryId}`);
-      const city = geoStore.getCityById(cityId);
-      if (!city) throw new Error(`Unable to find city: ${cityId}`);
-
       event = {
         id: eventId,
         name,
@@ -110,6 +119,7 @@ export const useEventStore = defineStore('events', () => {
     }
     const eventIndex = events.value.findIndex((e) => e.id === event.id);
     events.value.splice(eventIndex, 1, event);
+    syncToStorage();
   };
 
   const reorderEvents = async (newlyOrderedEvents: Event[]) => {
@@ -131,6 +141,7 @@ export const useEventStore = defineStore('events', () => {
       });
 
       events.value = _events;
+      syncToStorage();
     } catch (e) {
       events.value = originalEventOrder;
     } finally {
@@ -146,6 +157,7 @@ export const useEventStore = defineStore('events', () => {
     });
 
     events.value = _events;
+    syncToStorage();
   };
 
   // Modal open helpers - TODO replace
@@ -155,8 +167,10 @@ export const useEventStore = defineStore('events', () => {
   return {
     events,
     sortedEvents,
-    resetEvents,
     isReorderingEvents,
+    resetEvents,
+    syncFromStorage,
+    syncToStorage,
     loadEvents,
     reorderEvents,
     addEvent,

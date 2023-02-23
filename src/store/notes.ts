@@ -4,15 +4,28 @@ import { useAppStore } from './app';
 import * as api from '../api/api';
 import type { Note } from '../api/api.types';
 import { getRandomNumber } from '@/utils/number';
+import { set, get } from '@/utils/storage';
+
+const STORAGE_KEY = 'notes_v1';
 
 export const useNoteStore = defineStore('notes', () => {
   const appStore = useAppStore();
 
   const notes = ref<Note[]>([]);
 
+  const syncToStorage = () => {
+    set(STORAGE_KEY, notes.value);
+  };
+
+  const syncFromStorage = async () => {
+    const _notes = await get<Note[]>(STORAGE_KEY);
+    if (_notes) notes.value = _notes;
+  };
+
   const loadNotes = async () => {
     const _notes = await api.getNotes({ authToken: appStore.user?.token });
     notes.value = _notes;
+    syncToStorage();
   };
 
   const addNote = async ({ text }: { text: string }) => {
@@ -27,6 +40,7 @@ export const useNoteStore = defineStore('notes', () => {
     }
 
     notes.value.push(note);
+    syncToStorage();
   };
 
   const updateNote = async ({ id, text }: { id: number; text: string }) => {
@@ -42,6 +56,7 @@ export const useNoteStore = defineStore('notes', () => {
     }
     const noteIndex = notes.value.findIndex((n) => n.id === id);
     notes.value.splice(noteIndex, 1, updatedNote);
+    syncToStorage();
   };
 
   const removeNote = async (id: number) => {
@@ -50,10 +65,12 @@ export const useNoteStore = defineStore('notes', () => {
     }
     const index = notes.value.findIndex((note) => note.id === id);
     notes.value.splice(index, 1);
+    syncToStorage();
   };
 
   const resetNotes = () => {
     notes.value = [];
+    syncToStorage();
   };
 
   // Modal open helpers - TODO replace
@@ -66,6 +83,8 @@ export const useNoteStore = defineStore('notes', () => {
     updateNote,
     removeNote,
     resetNotes,
+    syncToStorage,
+    syncFromStorage,
     openAddStickyNoteModal,
   };
 });

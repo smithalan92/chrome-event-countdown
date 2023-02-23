@@ -203,8 +203,8 @@ const onClickAdd = async () => {
     name: eventName.value,
     date: eventDate.value.toISOString(),
     background: eventBackgroundImage.value,
-    countryId: selectedCountry.value!.id,
-    cityId: selectedCity.value!.id,
+    country: selectedCountry.value!,
+    city: selectedCity.value!,
   });
 
   modal.value!.close();
@@ -221,8 +221,8 @@ const onClickEdit = async () => {
     name: eventName.value,
     date: eventDate.value,
     background: eventBackgroundImage.value,
-    countryId: selectedCountry.value!.id,
-    cityId: selectedCity.value!.id,
+    country: selectedCountry.value!,
+    city: selectedCity.value!,
   });
 
   modal.value!.close();

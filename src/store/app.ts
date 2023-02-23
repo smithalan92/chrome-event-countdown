@@ -8,6 +8,8 @@ import { useEventStore } from './events';
 import type { AppUser } from './app.types';
 import { useGeoStore } from './geo';
 
+const STORAGE_KEY = 'user_v1';
+
 export const useAppStore = defineStore('app', () => {
   const noteStore = useNoteStore();
   const eventStore = useEventStore();
@@ -17,13 +19,19 @@ export const useAppStore = defineStore('app', () => {
 
   const isLoggedIn = computed(() => user.value !== null);
 
-  const syncState = () => {
-    set('user', user.value);
+  const syncToStorage = () => {
+    set(STORAGE_KEY, user.value);
   };
 
-  const restoreState = async () => {
-    const _user = await get<AppUser | null>('user');
+  const syncFromStorage = async () => {
+    const _user = await get<AppUser>(STORAGE_KEY);
     user.value = _user;
+  };
+
+  const restoreState = () => {
+    syncFromStorage();
+    eventStore.syncFromStorage();
+    noteStore.syncFromStorage();
   };
 
   const login = async ({ email, password }: { email: string; password: string }) => {
@@ -35,14 +43,14 @@ export const useAppStore = defineStore('app', () => {
       token: token,
     };
 
-    syncState();
+    syncToStorage();
 
     Promise.all([eventStore.loadEvents(), noteStore.loadNotes()]);
   };
 
   const logout = () => {
     user.value = null;
-    syncState();
+    syncToStorage();
     eventStore.resetEvents();
     noteStore.resetNotes();
   };
@@ -65,7 +73,8 @@ export const useAppStore = defineStore('app', () => {
   return {
     user,
     isLoggedIn,
-    syncState,
+    syncFromStorage,
+    syncToStorage,
     restoreState,
     login,
     logout,
