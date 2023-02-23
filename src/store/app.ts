@@ -44,6 +44,7 @@ export const useAppStore = defineStore('app', () => {
     user.value = null;
     syncState();
     eventStore.resetEvents();
+    noteStore.resetNotes();
   };
 
   const loadAppData = async () => {

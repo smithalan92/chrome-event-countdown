@@ -3,6 +3,7 @@ import { defineStore } from 'pinia';
 import { useAppStore } from './app';
 import * as api from '../api/api';
 import type { Note } from '../api/api.types';
+import { getRandomNumber } from '@/utils/number';
 
 export const useNoteStore = defineStore('notes', () => {
   const appStore = useAppStore();
@@ -15,18 +16,38 @@ export const useNoteStore = defineStore('notes', () => {
   };
 
   const addNote = async ({ text }: { text: string }) => {
-    const note = await api.addNote({ text }, { authToken: appStore.user?.token });
+    let note: Note;
+    if (appStore.isLoggedIn) {
+      note = await api.addNote({ text }, { authToken: appStore.user?.token });
+    } else {
+      note = {
+        id: getRandomNumber(),
+        text,
+      };
+    }
+
     notes.value.push(note);
   };
 
   const updateNote = async ({ id, text }: { id: number; text: string }) => {
-    const updatedNote = await api.updateNote({ id, text }, { authToken: appStore.user?.token });
+    let updatedNote: Note;
+
+    if (appStore.isLoggedIn) {
+      updatedNote = await api.updateNote({ id, text }, { authToken: appStore.user?.token });
+    } else {
+      updatedNote = {
+        id,
+        text,
+      };
+    }
     const noteIndex = notes.value.findIndex((n) => n.id === id);
     notes.value.splice(noteIndex, 1, updatedNote);
   };
 
   const removeNote = async (id: number) => {
-    await api.deleteNote({ id }, { authToken: appStore.user?.token });
+    if (appStore.isLoggedIn) {
+      await api.deleteNote({ id }, { authToken: appStore.user?.token });
+    }
     const index = notes.value.findIndex((note) => note.id === id);
     notes.value.splice(index, 1);
   };
