@@ -37,21 +37,11 @@ export const useGeoStore = defineStore('geo', () => {
     }
   };
 
-  const getCountryById = (id: number) => {
-    return countries.value.find((c) => c.id === id);
-  };
-
-  const getCityById = (id: number) => {
-    return cities.value.find((c) => c.id === id);
-  };
-
   return {
     countries,
     cities,
     isLoadingCities,
     loadCountries,
     loadCitiesForCountry,
-    getCountryById,
-    getCityById,
   };
 });

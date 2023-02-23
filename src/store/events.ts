@@ -5,7 +5,6 @@ import { computed } from 'vue';
 import { useAppStore } from './app';
 import type { City, Country, Event } from '../api/api.types';
 import { format } from 'date-fns';
-import { useGeoStore } from './geo';
 import { getRandomNumber } from '@/utils/number';
 import { set, get } from '@/utils/storage';
 
@@ -13,7 +12,6 @@ const STORAGE_KEY = 'events_v1';
 
 export const useEventStore = defineStore('events', () => {
   const appStore = useAppStore();
-  const geoStore = useGeoStore();
 
   const events = ref<Event[]>([]);
 
