@@ -21,7 +21,7 @@ import type {
 const PRODUCTION_API_URL = 'https://eventcountdownapi.mralansmith.com/api';
 const LOCAL_API_URL = 'http://localhost:3400/api';
 
-const API_URL = process.env.NODE_ENV === 'development' ? LOCAL_API_URL : PRODUCTION_API_URL;
+const API_URL = import.meta.env.MODE === 'development' ? LOCAL_API_URL : PRODUCTION_API_URL;
 
 const http = axios.create({
   baseURL: API_URL,

@@ -5,7 +5,8 @@
   "scripts": {
     "build": "bash ./build.sh",
     "build-app": "vite build",
-    "dev": "vite",
+    "dev-local": "vite",
+    "dev-prod": "vite --mode=prod-dev",
     "type-check": "vue-tsc --noEmit",
     "preview": "vite preview",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts"
