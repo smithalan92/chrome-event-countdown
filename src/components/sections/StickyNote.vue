@@ -4,7 +4,10 @@
       <close-icon class="fill-red-700 w-4 h-4" />
     </div>
     <div class="mt-4">
-      <textarea :value="note.text" class="outline-none border-0 w-full bg-transparent min-h-[50px] max-h-[300px]" @input="updateNote" />
+      <textarea
+        :value="note.text"
+        class="text-sm outline-none border-0 w-full bg-transparent min-h-[50px] max-h-[200px]"
+        @input="updateNote" />
     </div>
   </div>
 </template>
