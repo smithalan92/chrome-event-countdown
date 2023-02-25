@@ -26,7 +26,7 @@
     "v-click-outside": "^3.2.0",
     "vue": "^3.2.45",
     "vue-global-events": "^2.1.1",
-    "vue-select": "^4.0.0-beta.6",
+    "vue-multiselect": "^3.0.0-beta.1",
     "vue-timer-hook": "^1.0.60",
     "vuedraggable": "^4.1.0"
   },

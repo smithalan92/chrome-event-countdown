@@ -3,24 +3,36 @@
     <template #body>
       <div class="flex flex-col mb-2">
         <span class="min-w-[120px] select-none mb-2 font-semibold">Event Country</span>
-        <v-select v-model="selectedCountry" :options="countries" placeholder="Select a country" label="name" class="flex-1"></v-select>
+        <MultiSelect
+          class="h-9"
+          v-model="selectedCountry"
+          :options="countries"
+          placeholder="Select a country"
+          :multiple="false"
+          :searchable="true"
+          label="name"
+          :internal-search="true">
+          <template #noResult> No results found </template>
+          <template #noOptions>No results found</template>
+        </MultiSelect>
       </div>
       <div class="flex flex-col mb-2">
         <span class="min-w-[120px] select-none mb-2 font-semibold">Event City</span>
-        <v-select
+        <MultiSelect
+          class="h-9"
           v-model="selectedCity"
-          :disabled="!selectedCountry"
           :options="cities"
           placeholder="Select a city"
+          :disabled="!selectedCountry"
+          :multiple="false"
+          :searchable="true"
+          :loading="isLoadingCities"
+          :internal-search="false"
           label="name"
-          class="flex-1"
-          @search="searchCities"
-          :loading="isLoadingCities">
-          <template #no-options>
-            <template v-if="isLoadingCities"> Loading... </template>
-            <template v-else> No results found </template>
-          </template>
-        </v-select>
+          @search-change="searchCities">
+          <template #noResult> No results found </template>
+          <template #noOptions>No results found</template>
+        </MultiSelect>
       </div>
       <div class="flex flex-col mb-2">
         <span class="min-w-[120px] select-none mb-2 font-semibold">Event Name</span>
@@ -83,10 +95,9 @@
   </ModalBase>
 </template>
 <script setup lang="ts">
-// @ts-expect-error
-import vSelect from 'vue-select';
+import MultiSelect from 'vue-multiselect';
 import { debounce } from 'lodash';
-import 'vue-select/dist/vue-select.css';
+import 'vue-multiselect/dist/vue-multiselect.css';
 import ModalBase from './ModalBase.vue';
 import { ref, watch, computed, onMounted } from 'vue';
 import { useEventStore } from '@/store/events';
