@@ -12,6 +12,7 @@ export const useNoteStore = defineStore('notes', () => {
   const appStore = useAppStore();
 
   const notes = ref<Note[]>([]);
+  const isNoteModalOpen = ref(false);
 
   const syncToStorage = () => {
     set(STORAGE_KEY, notes.value);
@@ -73,11 +74,17 @@ export const useNoteStore = defineStore('notes', () => {
     syncToStorage();
   };
 
-  // Modal open helpers - TODO replace
-  const openAddStickyNoteModal = () => {};
+  const openNoteModal = () => {
+    isNoteModalOpen.value = true;
+  };
+
+  const closeNoteModal = () => {
+    isNoteModalOpen.value = false;
+  };
 
   return {
     notes,
+    isNoteModalOpen,
     loadNotes,
     addNote,
     updateNote,
@@ -85,6 +92,7 @@ export const useNoteStore = defineStore('notes', () => {
     resetNotes,
     syncToStorage,
     syncFromStorage,
-    openAddStickyNoteModal,
+    openNoteModal,
+    closeNoteModal,
   };
 });

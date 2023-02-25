@@ -1,5 +1,5 @@
 <template>
-  <ModalBase ref="modal" :title="modalTitle" @open="onModalOpen" @close="onModalClose">
+  <ModalBase :title="modalTitle" @close="onModalClose">
     <template #body>
       <div class="flex flex-col mb-2">
         <span class="min-w-[120px] select-none mb-2 font-semibold">Event Country</span>
@@ -88,7 +88,7 @@ import vSelect from 'vue-select';
 import { debounce } from 'lodash';
 import 'vue-select/dist/vue-select.css';
 import ModalBase from './ModalBase.vue';
-import { ref, onMounted, watch, computed } from 'vue';
+import { ref, watch, computed, onMounted } from 'vue';
 import { useEventStore } from '@/store/events';
 import { useGeoStore } from '@/store/geo';
 import type { City, Country } from '@/api/api.types';
@@ -103,15 +103,14 @@ const eventStore = useEventStore();
 const geoStore = useGeoStore();
 const { countries, cities, isLoadingCities } = storeToRefs(geoStore);
 
-const modal = ref<typeof ModalBase | null>(null);
 const nameRef = ref<HTMLInputElement | null>(null);
 
-const eventId = ref<number | null>(null);
-const eventName = ref('');
-const eventDate = ref(new Date());
-const eventBackgroundImage = ref('');
-const selectedCountry = ref<Country | null>(null);
-const selectedCity = ref<City | null>(null);
+const eventId = ref<number | null>(eventStore.eventToEdit?.id ?? null);
+const eventName = ref(eventStore.eventToEdit?.name ?? '');
+const eventDate = ref(eventStore.eventToEdit?.eventDate ?? new Date());
+const eventBackgroundImage = ref(eventStore.eventToEdit?.background ?? '');
+const selectedCountry = ref<Country | null>(eventStore.eventToEdit?.country ?? null);
+const selectedCity = ref<City | null>(eventStore.eventToEdit?.city ?? null);
 
 const mode = computed(() => {
   if (eventId.value) return 'edit';
@@ -136,33 +135,11 @@ watch(selectedCountry, (newVal, oldVal) => {
 });
 
 onMounted(() => {
-  eventStore.$onAction(({ name, args }) => {
-    if (name === 'openAddEventModal') {
-      const event = args[0];
-      if (event) {
-        eventId.value = event.id;
-        eventName.value = event.name;
-        eventDate.value = event.eventDate;
-        selectedCountry.value = event.country;
-        selectedCity.value = event.city;
-        eventBackgroundImage.value = event.background;
-      }
-
-      modal.value!.open();
-    }
-  });
+  if (nameRef.value) nameRef.value.focus();
 });
 
-const onModalOpen = () => {
-  if (nameRef.value) nameRef.value.focus();
-};
-
 const onModalClose = () => {
-  eventId.value = null;
-  eventName.value = '';
-  eventBackgroundImage.value = '';
-  selectedCountry.value = null;
-  selectedCity.value = null;
+  eventStore.closeEventModal();
 };
 
 const onClickConfirm = () => {
@@ -207,7 +184,7 @@ const onClickAdd = async () => {
     city: selectedCity.value!,
   });
 
-  modal.value!.close();
+  eventStore.closeEventModal();
 };
 
 const onClickEdit = async () => {
@@ -225,11 +202,11 @@ const onClickEdit = async () => {
     city: selectedCity.value!,
   });
 
-  modal.value!.close();
+  eventStore.closeEventModal();
 };
 
 const onClickCancel = () => {
-  modal.value!.close();
+  eventStore.closeEventModal();
 };
 
 const throttledLoadCities = debounce(

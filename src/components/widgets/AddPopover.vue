@@ -37,12 +37,12 @@ const togglePopover = () => {
 };
 
 const openAddEventModal = () => {
-  eventStore.openAddEventModal();
+  eventStore.openEventModal();
   togglePopover();
 };
 
 const openAddNoteModal = () => {
-  noteStore.openAddStickyNoteModal();
+  noteStore.openNoteModal();
   isPopoverOpen.value = false;
 };
 </script>

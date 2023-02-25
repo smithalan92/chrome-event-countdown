@@ -16,8 +16,9 @@ export const useAppStore = defineStore('app', () => {
   const geoStore = useGeoStore();
 
   const user = ref<AppUser | null>(null);
-
   const isLoggedIn = computed(() => user.value !== null);
+
+  const isAccountModalOpen = ref(false);
 
   const syncToStorage = () => {
     set(STORAGE_KEY, user.value);
@@ -35,17 +36,20 @@ export const useAppStore = defineStore('app', () => {
   };
 
   const login = async ({ email, password }: { email: string; password: string }) => {
-    const { user: _user, token } = await api.login({ email, password });
+    try {
+      const { user: _user, token } = await api.login({ email, password });
+      user.value = {
+        id: _user.id,
+        email: _user.email,
+        token: token,
+      };
 
-    user.value = {
-      id: _user.id,
-      email: _user.email,
-      token: token,
-    };
+      syncToStorage();
 
-    syncToStorage();
-
-    Promise.all([eventStore.loadEvents(), noteStore.loadNotes()]);
+      Promise.all([eventStore.loadEvents(), noteStore.loadNotes()]);
+    } catch {
+      throw new Error('Invalid login. Please try again.');
+    }
   };
 
   const logout = () => {
@@ -68,11 +72,18 @@ export const useAppStore = defineStore('app', () => {
   };
 
   // Modal open helpers - TODO replace
-  const openSettingsModal = () => {};
+  const openAccountModal = () => {
+    isAccountModalOpen.value = true;
+  };
+
+  const closeAccountModal = () => {
+    isAccountModalOpen.value = false;
+  };
 
   return {
     user,
     isLoggedIn,
+    isAccountModalOpen,
     syncFromStorage,
     syncToStorage,
     restoreState,
@@ -80,6 +91,7 @@ export const useAppStore = defineStore('app', () => {
     logout,
     loadAppData,
     startApp,
-    openSettingsModal,
+    openAccountModal,
+    closeAccountModal,
   };
 });

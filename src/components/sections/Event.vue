@@ -92,6 +92,6 @@ const onClickRemove = () => {
 };
 
 const onClickEdit = () => {
-  eventStore.openAddEventModal(props.event);
+  eventStore.openEventModal(props.event);
 };
 </script>

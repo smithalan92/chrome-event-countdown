@@ -1,6 +1,6 @@
 <!-- eslint-disable vue/no-lone-template -->
 <template>
-  <ModalBase ref="modal" title="Add Note" @open="onModalOpen" @close="onModalClose">
+  <ModalBase ref="modal" title="Add Note" @close="onModalClose">
     <template #body>
       <textarea
         ref="textarea"
@@ -38,19 +38,11 @@ const hasText = computed(() => {
 });
 
 onMounted(() => {
-  store.$onAction(({ name }) => {
-    if (name === 'openAddStickyNoteModal') {
-      modal.value!.open();
-    }
-  });
+  if (textarea.value) textarea.value.focus();
 });
 
-const onModalOpen = () => {
-  if (textarea.value) textarea.value.focus();
-};
-
 const onModalClose = () => {
-  text.value = '';
+  store.closeNoteModal();
 };
 
 const onClickAdd = () => {
@@ -58,10 +50,10 @@ const onClickAdd = () => {
     text: text.value,
   });
 
-  modal.value!.close();
+  store.closeNoteModal();
 };
 
 const onClickCancel = () => {
-  modal.value!.close();
+  store.closeNoteModal();
 };
 </script>

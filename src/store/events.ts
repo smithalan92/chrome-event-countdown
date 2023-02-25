@@ -14,6 +14,8 @@ export const useEventStore = defineStore('events', () => {
   const appStore = useAppStore();
 
   const events = ref<Event[]>([]);
+  const isEventModalOpen = ref(false);
+  const eventToEdit = ref<Event | null>(null);
 
   const sortedEvents = computed<Event[]>(() => {
     return events.value.sort((a, b) => {
@@ -158,14 +160,22 @@ export const useEventStore = defineStore('events', () => {
     syncToStorage();
   };
 
-  // Modal open helpers - TODO replace
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const openAddEventModal = (__event?: Event) => {};
+  const openEventModal = (_event?: Event) => {
+    if (_event) eventToEdit.value = _event;
+    isEventModalOpen.value = true;
+  };
+
+  const closeEventModal = () => {
+    eventToEdit.value = null;
+    isEventModalOpen.value = false;
+  };
 
   return {
     events,
     sortedEvents,
     isReorderingEvents,
+    isEventModalOpen,
+    eventToEdit,
     resetEvents,
     syncFromStorage,
     syncToStorage,
@@ -174,6 +184,7 @@ export const useEventStore = defineStore('events', () => {
     addEvent,
     removeEvent,
     updateEvent,
-    openAddEventModal,
+    openEventModal,
+    closeEventModal,
   };
 });
